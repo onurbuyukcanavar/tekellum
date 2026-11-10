@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dogrulama:
+    name: Lint, tip, test, migration ve derleme
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: muessir
+          POSTGRES_PASSWORD: muessir
+          POSTGRES_DB: muessir
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U muessir" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://muessir:muessir@localhost:5432/muessir
+      DIRECT_URL: postgresql://muessir:muessir@localhost:5432/muessir
+      NEXT_PUBLIC_SITE_URL: http://localhost:3000
+      NEXT_TELEMETRY_DISABLED: '1'
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Lint
+        run: npm run lint
+      - name: Tip kontrolü
+        run: npm run typecheck
+      - name: Birim testleri
+        run: npm test
+      - name: Migration'ları uygula
+        run: npx prisma migrate deploy
+      - name: Şema ile migration'lar birebir eşleşiyor mu?
+        run: |
+          set +e
+          npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --exit-code
+          code=$?
+          if [ "$code" = "2" ]; then
+            echo "::error::schema.prisma ile migration'lar arasında fark var. Eksik SQL:"
+            npx prisma migrate diff --from-config-datasource --to-schema prisma/schema.prisma --script
+          fi
+          exit $code
+      - name: Seed ve yönetici
+        run: |
+          npm run db:seed
+          npm run db:seed
+          ADMIN_PASSWORD='CI-icin-guclu-parola-1' npm run yonetici:olustur -- ci@ornek.com "CI"
+      - name: Derleme
+        run: npm run build
+      - name: Duman testi
+        run: |
+          npm start &
+          for i in $(seq 1 30); do curl -sf http://localhost:3000/api/health && break; sleep 1; done
+          curl -sf http://localhost:3000/ | grep -q 'Hukuku anlamak'
+          curl -sf http://localhost:3000/mevzuat | grep -q 'Türk Borçlar Kanunu'
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/yonetim)" = "307"
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/makaleler/olmayan-yazi)" = "404"

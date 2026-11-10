@@ -1,0 +1,24 @@
+# bağımlılıklar
+node_modules/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Prisma tarafından üretilen istemci
+generated/
+
+# ortam değişkenleri — asla commit'lemeyin
+.env
+.env.*
+!.env.example
+
+# Vercel
+.vercel
+
+# günlükler ve sistem dosyaları
+npm-debug.log*
+.DS_Store
+coverage/
