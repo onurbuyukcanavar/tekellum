@@ -1,6 +1,6 @@
 'use client';
 
-import { useActionState, useMemo, useState } from 'react';
+import { useActionState, useDeferredValue, useMemo, useState } from 'react';
 import { saveLawAction, type FormState } from '@/app/yonetim/actions';
 import { parseLawText } from '@/lib/law-text';
 import { isOfficialSourceUrl } from '@/lib/official-source';
@@ -26,7 +26,9 @@ export function LawForm({ initial }: { initial: LawFormValues }) {
   const errors = state.errors ?? {};
   const set = <K extends keyof LawFormValues>(key: K, value: LawFormValues[K]) => setValues((v) => ({ ...v, [key]: value }));
 
-  const articleCount = useMemo(() => parseLawText(values.content).filter((b) => b.kind === 'article').length, [values.content]);
+  // Büyük kanunlarda (ör. TTK ~1 MB) her tuş vuruşunda yeniden ayrıştırmamak için ertelenmiş değer kullanılır.
+  const deferredContent = useDeferredValue(values.content);
+  const articleCount = useMemo(() => parseLawText(deferredContent).filter((b) => b.kind === 'article').length, [deferredContent]);
   const contentChanged = values.content.trim() !== initial.content.trim();
   const officialOk = isOfficialSourceUrl(values.officialUrl);
 
@@ -63,8 +65,9 @@ export function LawForm({ initial }: { initial: LawFormValues }) {
             aria-invalid={!!errors.content}
           />
           <p className="field-hint">
-            Metni resmî kaynaktan kopyalayıp yapıştırın. “MADDE 49-” ile başlayan satırlar madde olarak algılanır ve
-            makalelerden doğrudan bağlantı verilebilir. Şu an algılanan madde sayısı: <strong>{articleCount}</strong>.
+            Metni resmî kaynaktan kopyalayıp yapıştırın ya da <code>npm run mevzuat:aktar</code> ile otomatik alın.
+            “MADDE 49-” ile başlayan satırlar madde, “# ” ile başlayanlar bölüm başlığı, “## ” ile başlayanlar madde
+            başlığı olarak gösterilir. Algılanan madde sayısı: <strong>{articleCount}</strong>.
           </p>
           <FieldError message={errors.content} />
         </div>
