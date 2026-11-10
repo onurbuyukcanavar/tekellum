@@ -49,20 +49,15 @@ Ardından `http://localhost:3000/yonetim` adresinden giriş yapın.
 
 ## Yayına alma (Vercel + Supabase)
 
-Supabase'i yalnızca PostgreSQL sunucusu olarak kullanmaya devam edebilirsiniz; artık Supabase Auth ya da API anahtarına gerek yoktur.
+Adım adım yayına alma rehberi için [YAYINA-ALMA.md](YAYINA-ALMA.md) dosyasına bakın. Özetle:
 
-1. **Supabase → Project Settings → Database → Connection string** bölümünden iki bağlantıyı alın:
-   - `DATABASE_URL`: **Transaction pooler** (6543 portu). Uygulama bunu kullanır.
-   - `DIRECT_URL`: **Session pooler** (5432 portu) ya da doğrudan bağlantı. Migration'lar bunu kullanır.
-2. **Vercel → Project → Settings → Environment Variables** bölümüne `DATABASE_URL`, `DIRECT_URL` ve `NEXT_PUBLIC_SITE_URL` (son HTTPS adresi) değişkenlerini ekleyin. Eski `NEXT_PUBLIC_SUPABASE_URL` ve `NEXT_PUBLIC_SUPABASE_ANON_KEY` değişkenleri silinebilir.
-3. Dağıtın. `vercel.json`, derleme sırasında bekleyen migration'ları otomatik uygular (`npm run vercel-build`).
-4. Kendi bilgisayarınızda `.env` dosyasına aynı `DIRECT_URL` değerini yazıp bir kez çalıştırın:
-   ```bash
-   npm run db:seed
-   npm run yonetici:olustur -- eposta@alanadi.com "Ad Soyad"
-   npm run veri:aktar        # yalnızca eski Supabase sürümünde içerik girdiyseniz
-   ```
+1. Supabase'den `DATABASE_URL` (Transaction pooler, 6543), `DIRECT_URL` (Session pooler, 5432) ve kök sertifikayı (`prod-ca-2021.crt` → `DATABASE_CA_CERT`) alın.
+2. Bunları ve `NEXT_PUBLIC_SITE_URL` değişkenini Vercel'e ekleyin; fonksiyon bölgesini veritabanıyla aynı bölgeye ayarlayın.
+3. Dağıtın. Migration'lar ve başlangıç kataloğu derleme sırasında otomatik uygulanır (`vercel.json` → `npm run vercel-build`).
+4. Kendi bilgisayarınızda yönetici hesabını oluşturun: `npm run yonetici:olustur -- eposta@alanadi.com "Ad Soyad"`.
 5. `https://alanadiniz/api/health` adresi `{"ok":true,"database":"ok"}` döndürmelidir.
+
+> **Neden kök sertifika?** Supabase'in sertifikası kendi kök sertifikasıyla imzalıdır. Node bu kök sertifikayı tanımadığı için yalnızca `sslmode=require` kullanıldığında bağlantı “self-signed certificate in certificate chain” hatasıyla kurulamaz. `DATABASE_CA_CERT` tanımlandığında bağlantı hem şifrelenir hem de sunucunun kimliği doğrulanır.
 
 ### Eski Supabase verisini taşıma
 

@@ -6,6 +6,7 @@
  */
 import 'dotenv/config';
 import { Client } from 'pg';
+import { pgConnectionConfig } from '../lib/db-ssl';
 import { createPrismaClient } from '../lib/prisma-client';
 import { sanitizeArticleHtml } from '../lib/sanitize';
 import { slugify } from '../lib/slug';
@@ -26,7 +27,8 @@ function toHtml(value: string): string {
 
 async function main() {
   const legacyUrl = process.env.LEGACY_DATABASE_URL || process.env.DIRECT_URL || process.env.DATABASE_URL;
-  const legacy = new Client({ connectionString: legacyUrl });
+  if (!legacyUrl) throw new Error('DATABASE_URL tanımlı değil.');
+  const legacy = new Client(pgConnectionConfig(legacyUrl));
   const prisma = createPrismaClient(process.env.DIRECT_URL || process.env.DATABASE_URL);
   await legacy.connect();
   try {
