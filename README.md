@@ -1,77 +1,92 @@
-# MÜESSİR — production-oriented starter
+# MÜESSİR
 
-Personal legal publishing platform: public article pages, admin-only article editor, draft/publish workflow, legislation catalogue, Supabase Auth, PostgreSQL, and Row Level Security (RLS).
+Hukuk, düşünce ve metin üzerine kişisel yayın platformu: makaleler, mevzuat kütüphanesi ve makale–kanun maddesi ilişkilendirmesi.
 
-> **Status:** This is a deployable application starter, not a site already hosted on the public internet. You must create the Supabase project, configure secrets, deploy it, and connect your domain. No credentials are embedded in this repository. The law catalogue contains names/numbers and official-source links only; it does not claim to contain complete or current statutory text.
+## Teknoloji
 
-## Stack
-- Next.js App Router + TypeScript
-- Supabase Auth and PostgreSQL
-- RLS policies that allow public reads of published articles and legislation, while restricting article writes and all legislation writes to explicitly allow-listed admin users
-- Vercel-compatible deployment
+| Katman | Seçim |
+| --- | --- |
+| Uygulama | Next.js 16 (App Router), React 19, TypeScript |
+| Veritabanı | PostgreSQL + Prisma 7 (`@prisma/adapter-pg`) |
+| Editör | Tiptap 3 (kalın/italik/altı çizili, başlıklar, listeler, alıntı, bağlantı, tablo, Word `.docx` içe aktarma) |
+| Doğrulama | Zod 4 (tüm form girdileri sunucuda doğrulanır) |
+| Tasarım | Tailwind CSS 4, Source Serif 4 + Inter, açık/koyu tema |
+| Kimlik doğrulama | Kendi oturum sistemi: scrypt parola özeti, veritabanında saklanan oturumlar, `httpOnly` çerez |
 
-## 1. Requirements
-- Node.js 20.9+ (LTS recommended)
-- A Supabase account/project
-- A GitHub account and Vercel account for public deployment
+## Özellikler
 
-## 2. Create the database
-1. Create a Supabase project.
-2. Open **SQL Editor** in Supabase.
-3. Run the complete `supabase/schema.sql` script.
-4. In Supabase **Authentication → Users**, create your personal user (email/password). Disable public sign-ups in Authentication settings after your own user is created, unless you have a clear reason to allow registration.
-5. Copy the user's UUID from Authentication → Users.
-6. In SQL Editor run the following, replacing the UUID with your own:
+- **Makaleler:** taslak/yayın akışı, öne çıkan yazı, kategoriler, okuma süresi, önizleme.
+- **Mevzuat kütüphanesi:** 12 temel kanun (TMK, TBK, HMK, İİK, TCK, CMK, AY, İşK, İYUK, TTK, TKHK, KVKK) ve Mevzuat Bilgi Sistemi bağlantıları.
+- **Doğrulama ilkesi:** Bir kanunun metni, ancak yönetici “resmî kaynakla karşılaştırdım” kutusunu işaretlerse yayımlanır. Bunun için resmî kaynak bağlantısının `mevzuat.gov.tr` ya da `resmigazete.gov.tr` adresinde olması gerekir. Doğrulanmamış metin sitede gösterilmez.
+- **Makale ↔ madde bağlantısı:** Bir makaleye “TBK m. 49” gibi atıflar eklenebilir. Makalenin altında listelenir, kanun sayfasında `#madde-49` çapasına bağlanır ve kanun sayfasında “Bu kanuna atıf yapan yazılar” bölümünde görünür.
+- **Yönetim paneli (`/yonetim`):** genel bakış, makale ve mevzuat yönetimi, parola değiştirme, açık oturumları kapatma.
+- **SEO:** Türkçe adresler (`/makaleler`, `/mevzuat`), `sitemap.xml`, `robots.txt`, Open Graph etiketleri. Eski `/articles`, `/laws` ve `/admin` adresleri kalıcı olarak yeni adreslere yönlendirilir.
 
-```sql
-insert into public.admin_users (user_id)
-values ('YOUR-AUTH-USER-UUID');
-```
+## Güvenlik
 
-Never put a Supabase `service_role` key in `.env.local`, browser code, GitHub, or Vercel client-exposed variables. This application needs only the publishable/anon key in the browser; RLS protects writes.
+- Her yönetim sayfası ve her yazma işlemi, sunucuda veritabanı üzerinden oturumu doğrular (`requireAdmin`). `proxy.ts` yalnızca çerezsiz istekleri erkenden yönlendirir.
+- Parolalar Node'un yerleşik `scrypt` işleviyle özetlenir (N=2¹⁵, r=8, p=1). Oturum belirteci veritabanında yalnızca SHA-256 özeti olarak tutulur.
+- Üretimde çerez adı `__Host-muessir_oturum`'dur: `Secure`, `httpOnly`, `SameSite=Lax`, ömrü 7 gün.
+- Kaba kuvvet koruması: aynı e-posta için 15 dakikada 5, aynı IP için 20 başarısız denemeden sonra giriş kilitlenir.
+- Makale HTML'i kaydederken ve gösterirken beyaz listeyle temizlenir. Mevzuat metni HTML olarak yorumlanmaz.
+- Güvenlik başlıkları: HSTS, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`. Yönetim sayfaları `noindex` ve `no-store` başlıklarıyla sunulur.
+- Herkese açık kayıt yoktur. Yönetici hesabı yalnızca komut satırından oluşturulur.
 
-## 3. Run locally
-```bash
-cp .env.example .env.local
-```
-Fill in values from **Supabase → Project Settings → API**:
-- `NEXT_PUBLIC_SUPABASE_URL`
-- `NEXT_PUBLIC_SUPABASE_ANON_KEY` (use the current publishable/anon key shown by your project)
-- `NEXT_PUBLIC_SITE_URL=http://localhost:3000`
+## Kurulum (yerel)
 
-Then run:
+Gereksinim: Node.js 20.9+ ve bir PostgreSQL veritabanı.
+
 ```bash
 npm install
+cp .env.example .env          # DATABASE_URL ve DIRECT_URL değerlerini girin
+npm run db:migrate            # tabloları oluşturur
+npm run db:seed               # 12 kanunluk başlangıç kataloğu
+npm run yonetici:olustur -- eposta@alanadi.com "Ad Soyad"   # parola gizli olarak sorulur
 npm run dev
 ```
-Open `http://localhost:3000`. Visit `/admin`, sign in with the Supabase user you created, and create/publish an article. Test a draft in a private browser window: it should not be publicly visible.
 
-## 4. Deploy publicly (Vercel)
-1. Push this folder to a **private GitHub repository**.
-2. In Vercel, import that repository. Framework should be detected as Next.js.
-3. Add the same three environment variables in Vercel Project Settings → Environment Variables. Set `NEXT_PUBLIC_SITE_URL` to the final HTTPS domain.
-4. Deploy. In Supabase Authentication → URL Configuration, set the Site URL to the final site URL and add the local and production URLs to Redirect URLs as needed.
-5. Visit `/api/health` to check the deployment responds.
-6. Add your custom domain in Vercel and follow its DNS instructions at your domain registrar. DNS propagation and domain purchase are separate from this code package.
+Ardından `http://localhost:3000/yonetim` adresinden giriş yapın.
 
-## 5. Publishing workflow
-- `/admin`: sign in, create an article, fill title/slug/category/excerpt, use the Word-like rich-text editor or import a `.docx` file, then select Draft or Publish. Save explicitly; editing is not autosaved.
-- The article editor supports bold, italic, underline, headings, blockquotes, ordered/unordered lists, undo/redo, paste cleanup, and Word `.docx` import (up to 10 MB). Imported Word text, basic formatting, and tables are converted into HTML; some advanced layout, fonts, images, headers/footers, footnotes, and page-level formatting may not transfer exactly. Review the imported article before publishing. Old plain-text records remain readable. The public article renderer sanitizes stored HTML before display.
-- The laws panel lets you add/edit/delete a law record and official URL. Only mark a text verified after checking it against the official current source. Starter records intentionally do not include full law text.
-- Public pages: `/`, `/articles/[slug]`, `/laws`, `/laws/[slug]`.
+## Yayına alma (Vercel + Supabase)
 
-## Security and operational checklist before relying on it
-- Use a unique, strong password and MFA where available; restrict Supabase Auth registration.
-- Keep the GitHub repository private if desired; never commit `.env.local`.
-- Verify the RLS policies in Supabase and test as both anonymous visitor and admin.
-- Configure regular database backups and periodically test restore. Confirm the backup/retention plan for your chosen Supabase tier.
-- Add a privacy notice and contact information before collecting visitor data or enabling analytics.
-- Add rate limiting/monitoring if you later add public forms, comments, or other write endpoints.
-- Confirm current legal texts, amendments, effective dates and official URLs before publishing them. This software is not legal advice and does not guarantee the accuracy or currentness of legislation.
-- Before production launch, install dependencies and run `npm run build`; test admin login, rich-text formatting after saving and reopening, Word `.docx` import, publish/draft visibility, duplicate slugs, deletion, mobile layout, and backups. Dependency installation/build could not be completed in the generation environment, so do not treat this archive as build-verified until these checks pass.
+Supabase'i yalnızca PostgreSQL sunucusu olarak kullanmaya devam edebilirsiniz; artık Supabase Auth ya da API anahtarına gerek yoktur.
 
-## Troubleshooting
-- **No articles shown:** publish an article through `/admin`; check Supabase URL/key and SQL schema.
-- **Admin login succeeds but access is denied:** ensure your authenticated user's UUID is present in `public.admin_users`.
-- **Can sign in but cannot save:** inspect Supabase logs and ensure the full RLS policies from `schema.sql` were applied.
-- **Redirect loop or login issues after deployment:** check Supabase Auth Site URL/Redirect URLs and the `NEXT_PUBLIC_SITE_URL` value.
+1. **Supabase → Project Settings → Database → Connection string** bölümünden iki bağlantıyı alın:
+   - `DATABASE_URL`: **Transaction pooler** (6543 portu). Uygulama bunu kullanır.
+   - `DIRECT_URL`: **Session pooler** (5432 portu) ya da doğrudan bağlantı. Migration'lar bunu kullanır.
+2. **Vercel → Project → Settings → Environment Variables** bölümüne `DATABASE_URL`, `DIRECT_URL` ve `NEXT_PUBLIC_SITE_URL` (son HTTPS adresi) değişkenlerini ekleyin. Eski `NEXT_PUBLIC_SUPABASE_URL` ve `NEXT_PUBLIC_SUPABASE_ANON_KEY` değişkenleri silinebilir.
+3. Dağıtın. `vercel.json`, derleme sırasında bekleyen migration'ları otomatik uygular (`npm run vercel-build`).
+4. Kendi bilgisayarınızda `.env` dosyasına aynı `DIRECT_URL` değerini yazıp bir kez çalıştırın:
+   ```bash
+   npm run db:seed
+   npm run yonetici:olustur -- eposta@alanadi.com "Ad Soyad"
+   npm run veri:aktar        # yalnızca eski Supabase sürümünde içerik girdiyseniz
+   ```
+5. `https://alanadiniz/api/health` adresi `{"ok":true,"database":"ok"}` döndürmelidir.
+
+### Eski Supabase verisini taşıma
+
+Yeni tablolar (`article`, `law`, …), eski tablolarla (`articles`, `laws`, `admin_users`) çakışmayacak adlar taşır; aynı veritabanında yan yana durabilirler. `npm run veri:aktar` eski makaleleri ve mevzuat metinlerini yeni tablolara kopyalar ve eski tablolara dokunmaz. Aynı kısa adlı kayıt zaten varsa onu atlar, yani tekrar çalıştırmak güvenlidir. Eski “doğrulandı” işaretleri taşınmaz; her metnin yeni sistemde yeniden doğrulanması gerekir. Aktarımı kontrol ettikten sonra eski tabloları Supabase'de silebilirsiniz.
+
+## Komutlar
+
+| Komut | Açıklama |
+| --- | --- |
+| `npm run dev` | Geliştirme sunucusu |
+| `npm run build` / `npm start` | Üretim derlemesi / sunucu |
+| `npm run lint` · `npm run typecheck` · `npm test` | Kalite kontrolleri |
+| `npm run db:migrate` | Bekleyen migration'ları uygular |
+| `npm run db:seed` | Başlangıç mevzuat kataloğu (tekrar çalıştırmak güvenlidir) |
+| `npm run db:studio` | Prisma Studio ile veritabanını görüntüler |
+| `npm run yonetici:olustur -- e-posta "Ad"` | Yönetici oluşturur ya da parolasını sıfırlar (tüm oturumları kapatır) |
+| `npm run veri:aktar` | Eski Supabase tablolarından veri aktarır |
+
+Şema değişikliği yaptığınızda `npx prisma migrate dev --name aciklama` komutuyla yeni migration oluşturun.
+
+## Sürekli entegrasyon
+
+`.github/workflows/ci.yml` her gönderimde şunları çalıştırır: lint, tip kontrolü, birim testleri, gerçek PostgreSQL üzerinde migration, şema ile migration'ların birebir eşleşme kontrolü, seed, derleme ve duman testi.
+
+## Hukuki not
+
+Bu yazılım hukuki danışmanlık sunmaz ve mevzuat metinlerinin doğruluğunu ya da güncelliğini garanti etmez. Metinleri yayımlamadan önce Mevzuat Bilgi Sistemi ve Resmî Gazete üzerinden doğrulayın.
