@@ -1,6 +1,8 @@
 import 'server-only';
+import { unstable_cache } from 'next/cache';
 import { Prisma } from '@/generated/prisma/client';
 import { db } from '@/lib/db';
+import { buildLawToc, parseLawText, type LawToc } from '@/lib/law-text';
 import { isOfficialSourceUrl } from '@/lib/official-source';
 import type { LawInput } from '@/lib/validation';
 import type { SaveResult } from './articles';
@@ -21,16 +23,41 @@ export async function listLawOptions() {
   return byTurkishTitle(await db.law.findMany({ select: { id: true, title: true, shortName: true, lawNumber: true } }));
 }
 
-export function getLawBySlug(slug: string) {
-  return db.law.findUnique({
+/** Kanun sayfası için üst bilgiler; büyük metin (content) bilerek yüklenmez. */
+export async function getLawBySlug(slug: string) {
+  const law = await db.law.findUnique({
     where: { slug },
-    include: {
+    select: {
+      id: true, title: true, slug: true, lawNumber: true, shortName: true, officialUrl: true,
+      verificationStatus: true, verifiedAt: true, updatedAt: true,
       articleRefs: {
         where: { article: { status: 'YAYINDA' } },
         include: { article: { select: { title: true, slug: true, publishedAt: true } } },
       },
     },
   });
+  if (!law) return null;
+  const hasContent = (await db.law.count({ where: { id: law.id, content: { not: '' } } })) > 0;
+  return { ...law, hasContent, published: law.verificationStatus === 'DOGRULANDI' && hasContent };
+}
+
+/** İçindekiler ve madde sayısı; metin sürümüne (updatedAt) göre önbelleğe alınır. */
+export function getLawToc(id: string, updatedAt: Date): Promise<LawToc> {
+  return unstable_cache(
+    async () => {
+      const row = await db.law.findUnique({ where: { id }, select: { content: true } });
+      return buildLawToc(parseLawText(row?.content ?? ''));
+    },
+    ['law-toc', id, String(updatedAt.getTime())],
+    { revalidate: 60 * 60 * 24 * 30 },
+  )();
+}
+
+/** Yayımlanabilir (doğrulanmış ve metni olan) kanunun içeriği; değilse null. */
+export async function getPublishedLawContent(slug: string) {
+  const law = await db.law.findUnique({ where: { slug }, select: { content: true, verificationStatus: true, updatedAt: true } });
+  if (!law || law.verificationStatus !== 'DOGRULANDI' || !law.content.trim()) return null;
+  return { content: law.content, version: String(law.updatedAt.getTime()) };
 }
 
 export function getLawForAdmin(id: string) {

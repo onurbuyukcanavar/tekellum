@@ -17,6 +17,8 @@ Hukuk, düşünce ve metin üzerine kişisel yayın platformu: makaleler, mevzua
 
 - **Makaleler:** taslak/yayın akışı, öne çıkan yazı, kategoriler, okuma süresi, önizleme.
 - **Mevzuat kütüphanesi:** 12 temel kanun (TMK, TBK, HMK, İİK, TCK, CMK, AY, İşK, İYUK, TTK, TKHK, KVKK) ve Mevzuat Bilgi Sistemi bağlantıları.
+- **Tam metinler:** 12 kanunun güncel (konsolide) metni Mevzuat Bilgi Sistemi'nden alınır; bölüm başlıkları içindekilerde, madde başlıkları maddenin üstünde gösterilir, “Maddeye git” kutusu ve `#madde-49`, `#madde-68-a`, `#gecici-madde-1` bağlantıları vardır. Büyük metinler (TTK ≈ 1 MB) sayfadan ayrı, sürümlü ve CDN'de önbelleğe alınan bir adresten yüklenir.
+- **Metin aktarımı denetimi:** `npm run mevzuat:aktar`, dönüştürülen metnin resmî HTML'deki kelimelerin en az %99,9'unu içerdiğini doğrulamadan hiçbir kanunu kaydetmez.
 - **Doğrulama ilkesi:** Bir kanunun metni, ancak yönetici “resmî kaynakla karşılaştırdım” kutusunu işaretlerse yayımlanır. Bunun için resmî kaynak bağlantısının `mevzuat.gov.tr` ya da `resmigazete.gov.tr` adresinde olması gerekir. Doğrulanmamış metin sitede gösterilmez.
 - **Makale ↔ madde bağlantısı:** Bir makaleye “TBK m. 49” gibi atıflar eklenebilir. Makalenin altında listelenir, kanun sayfasında `#madde-49` çapasına bağlanır ve kanun sayfasında “Bu kanuna atıf yapan yazılar” bölümünde görünür.
 - **Yönetim paneli (`/yonetim`):** genel bakış, makale ve mevzuat yönetimi, parola değiştirme, açık oturumları kapatma.
@@ -75,6 +77,7 @@ Yeni tablolar (`article`, `law`, …), eski tablolarla (`articles`, `laws`, `adm
 | `npm run db:studio` | Prisma Studio ile veritabanını görüntüler |
 | `npm run yonetici:olustur -- e-posta "Ad"` | Yönetici oluşturur ya da parolasını sıfırlar (tüm oturumları kapatır) |
 | `npm run veri:aktar` | Eski Supabase tablolarından veri aktarır |
+| `npm run mevzuat:aktar` | Kanunların güncel metnini Mevzuat Bilgi Sistemi'nden alır, denetler ve kaydeder (`-- --kuru` ile yalnızca dosyaya yazar, `-- kisa-ad` ile tek kanun) |
 
 Şema değişikliği yaptığınızda `npx prisma migrate dev --name aciklama` komutuyla yeni migration oluşturun.
 
