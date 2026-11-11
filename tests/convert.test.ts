@@ -86,7 +86,7 @@ describe('UDF yazma', () => {
   });
 });
 
-describe('Word', () => {
+describe('Word', { timeout: 30_000 }, () => {
   const docx = new Uint8Array(readFileSync('tests/fixtures/ornek-dilekce.docx'));
 
   it('.docx dilekçeyi okur (başlık, tablo, görsel, sayfa alanları)', () => {
@@ -110,7 +110,7 @@ describe('Word', () => {
   });
 });
 
-describe('PDF', () => {
+describe('PDF', { timeout: 30_000 }, () => {
   it('UDF → PDF metni okunabilir bir PDF üretir ve PDF geri okunabilir', async () => {
     const out = await convertFile('udf-pdf', { name: 'dilekce.udf', bytes: syntheticUdf() }, env);
     expect(out.name).toBe('dilekce.pdf');

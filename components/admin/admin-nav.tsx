@@ -8,6 +8,7 @@ const LINKS = [
   { href: '/yonetim/makaleler', label: 'Makaleler' },
   { href: '/yonetim/mevzuat', label: 'Mevzuat' },
   { href: '/yonetim/resmi-gazete', label: 'Resmî Gazete' },
+  { href: '/yonetim/mesajlar', label: 'Mesajlar' },
   { href: '/yonetim/hesap', label: 'Hesap' },
 ];
 

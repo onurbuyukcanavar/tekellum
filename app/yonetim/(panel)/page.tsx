@@ -7,12 +7,13 @@ import { formatDateTime } from '@/lib/format';
 export const metadata = { title: 'Genel bakış' };
 
 export default async function DashboardPage() {
-  const [published, drafts, lawsTotal, lawsVerified, recent] = await Promise.all([
+  const [published, drafts, lawsTotal, lawsVerified, recent, unreadMessages] = await Promise.all([
     db.article.count({ where: { status: 'YAYINDA' } }),
     db.article.count({ where: { status: 'TASLAK' } }),
     db.law.count(),
     db.law.count({ where: { verificationStatus: 'DOGRULANDI' } }),
     db.article.findMany({ orderBy: { updatedAt: 'desc' }, take: 6, select: { id: true, title: true, status: true, updatedAt: true } }),
+    db.contactMessage.count({ where: { readAt: null } }),
   ]);
 
   const stats = [
@@ -28,6 +29,11 @@ export default async function DashboardPage() {
         title="Genel bakış"
         actions={<Link href="/yonetim/makaleler/yeni" className="btn">+ Yeni makale</Link>}
       />
+      {unreadMessages > 0 && (
+        <Link href="/yonetim/mesajlar" className="notice mb-6 block border-bronze/50 transition hover:border-bronze">
+          <strong className="text-navy">{unreadMessages} okunmamış mesaj</strong> var — iletişim formundan geldi. Görüntüle →
+        </Link>
+      )}
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {stats.map((s) => (
           <Link key={s.label} href={s.href} className="card p-5 transition hover:border-bronze/60">

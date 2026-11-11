@@ -159,3 +159,21 @@ model GazetteItem {
   @@index([issueId, position])
   @@map("gazette_item")
 }
+
+/// İletişim sayfasındaki formdan gelen mesajlar. Önce burada saklanır, sonra e-postayla iletilir.
+model ContactMessage {
+  id         String    @id @default(cuid())
+  name       String
+  email      String
+  subject    String
+  body       String
+  ipHash     String    @map("ip_hash") // IP adresinin kendisi değil, özeti (hız sınırı için)
+  createdAt  DateTime  @default(now()) @map("created_at")
+  readAt     DateTime? @map("read_at")
+  emailedAt  DateTime? @map("emailed_at")
+  emailError String?   @map("email_error")
+
+  @@index([createdAt])
+  @@index([ipHash, createdAt])
+  @@map("contact_message")
+}
