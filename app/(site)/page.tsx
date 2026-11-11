@@ -16,9 +16,9 @@ export default async function HomePage() {
       <section className="container-page pt-16 pb-14 sm:pt-24 sm:pb-20">
         <p className="eyebrow">Bağımsız hukuk ve düşünce yayını</p>
         <h1 className="mt-5 max-w-3xl text-4xl leading-[1.12] sm:text-6xl">
-          Hukuku anlamak,
+          Gelenek, Usul
           <br />
-          <span className="italic text-bronze">metinle</span> düşünmek.
+          ve <span className="italic text-bronze">Gelecek</span>
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-soft">
           Müessir; hukuk, düşünce ve metin üzerine makalelerin, çalışma notlarının ve mevzuat kaynaklarının bir araya
