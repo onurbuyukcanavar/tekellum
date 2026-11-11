@@ -7,6 +7,7 @@ const LINKS = [
   { href: '/yonetim', label: 'Genel bakış', exact: true },
   { href: '/yonetim/makaleler', label: 'Makaleler' },
   { href: '/yonetim/mevzuat', label: 'Mevzuat' },
+  { href: '/yonetim/resmi-gazete', label: 'Resmî Gazete' },
   { href: '/yonetim/hesap', label: 'Hesap' },
 ];
 

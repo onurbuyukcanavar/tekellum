@@ -153,3 +153,40 @@ export async function deleteLawAction(formData: FormData): Promise<void> {
   revalidatePath('/', 'layout');
   redirect('/yonetim/mevzuat?silindi=1');
 }
+
+// ---------------------------------------------------------------- Resmî Gazete
+
+/** En fazla bu kadar gün tek seferde aktarılabilir (sunucu işlem süresi sınırı nedeniyle). */
+const GAZETTE_MAX_DAYS = 31;
+
+export async function importGazetteAction(_prev: FormState, formData: FormData): Promise<FormState> {
+  await requireAdmin();
+  const { importRange } = await import('@/lib/gazette/import');
+  const { addDays, isDateKey, todayKey } = await import('@/lib/gazette/source');
+  const today = todayKey();
+  const from = String(formData.get('from') ?? '');
+  const to = String(formData.get('to') || from);
+  if (!isDateKey(from) || !isDateKey(to)) return { errors: { from: 'Geçerli bir tarih seçin.' } };
+  if (from > to) return { errors: { to: 'Bitiş tarihi başlangıçtan önce olamaz.' } };
+  if (to > today) return { errors: { to: 'Gelecek bir tarih seçilemez.' } };
+  if (addDays(from, GAZETTE_MAX_DAYS - 1) < to) return { errors: { to: `Tek seferde en fazla ${GAZETTE_MAX_DAYS} gün aktarılabilir.` } };
+
+  const deadline = Date.now() + 270_000;
+  const results = await importRange(db, from, to, deadline);
+  revalidatePath('/resmi-gazete', 'layout');
+  revalidatePath('/yonetim/resmi-gazete');
+
+  const issues = results.flatMap((r) => r.issues);
+  const errors = results.filter((r) => r.error);
+  const failedTexts = issues.reduce((n, i) => n + i.failed, 0);
+  const notPublished = results.filter((r) => !r.published && !r.error).length;
+  const stopped = results.length < Math.round((Date.parse(to) - Date.parse(from)) / 86_400_000) + 1;
+  const parts = [
+    `${issues.length} sayı, ${issues.reduce((n, i) => n + i.items, 0)} içerik aktarıldı.`,
+    notPublished ? `${notPublished} gün yayım yok.` : '',
+    failedTexts ? `${failedTexts} metin alınamadı (bir sonraki aktarımda yeniden denenecek).` : '',
+    errors.length ? `Hata: ${errors.map((e) => `${e.date} (${e.error})`).join('; ')}` : '',
+    stopped ? 'Süre sınırına ulaşıldı; kalan günler için işlemi tekrarlayın.' : '',
+  ].filter(Boolean);
+  return { ok: !errors.length, message: parts.join(' ') };
+}

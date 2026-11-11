@@ -2,12 +2,16 @@ import Link from 'next/link';
 import { connection } from 'next/server';
 import { ArticleCard } from '@/components/article-card';
 import { formatDate } from '@/lib/format';
+import { formatGazetteDate, supplementLabel } from '@/lib/gazette/format';
 import { getFeaturedArticle, listPublishedArticles } from '@/lib/services/articles';
+import { getLatestHighlights } from '@/lib/services/gazette';
 import { listLaws } from '@/lib/services/laws';
 
 export default async function HomePage() {
   await connection();
-  const [featured, latest, laws] = await Promise.all([getFeaturedArticle(), listPublishedArticles({ limit: 7 }), listLaws()]);
+  const [featured, latest, laws, gazette] = await Promise.all([
+    getFeaturedArticle(), listPublishedArticles({ limit: 7 }), listLaws(), getLatestHighlights(6),
+  ]);
   const rest = latest.filter((a) => a.id !== featured?.id).slice(0, 6);
   const lead = featured ?? null;
 
@@ -56,6 +60,36 @@ export default async function HomePage() {
           !lead && <p className="notice">Henüz yayımlanmış makale bulunmuyor.</p>
         )}
       </section>
+
+      {gazette && gazette.items.length > 0 && (
+        <section className="container-page mt-24" aria-labelledby="rg-baslik">
+          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="eyebrow">Resmî Gazete</p>
+              <h2 id="rg-baslik" className="mt-3 text-3xl">
+                {formatGazetteDate(gazette.date)}
+              </h2>
+              <p className="mt-1 text-sm text-muted">
+                Sayı {gazette.number}
+                {gazette.supplement > 0 && ` · ${supplementLabel(gazette.supplement)}`}
+              </p>
+            </div>
+            <Link href={`/resmi-gazete/${gazette.slug}`} className="link-quiet text-sm text-ink-soft">
+              {gazette.total > gazette.items.length ? `Tüm içerik (${gazette.total}) →` : 'Sayıya git →'}
+            </Link>
+          </div>
+          <ul className="grid gap-x-10 border-t border-line md:grid-cols-2">
+            {gazette.items.map((item) => (
+              <li key={item.code} className="border-b border-line">
+                <Link href={`/resmi-gazete/${gazette.slug}/${item.code}`} className="group block py-4">
+                  {item.category && <span className="text-xs font-semibold uppercase tracking-[0.14em] text-muted">{item.category}</span>}
+                  <span className="mt-1 block leading-snug text-ink transition group-hover:text-bronze">{item.title}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <section className="container-page mt-24">
         <div className="grid gap-10 rounded-2xl bg-navy px-8 py-12 text-paper sm:px-12 lg:grid-cols-[1fr_1.4fr]">

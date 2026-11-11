@@ -16,9 +16,10 @@ export function SiteFooter() {
             <a className="link-quiet" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
           </p>
         </div>
-        <nav aria-label="Alt menü" className="flex gap-5">
+        <nav aria-label="Alt menü" className="flex flex-wrap gap-x-5 gap-y-2">
           <Link className="link-quiet" href="/makaleler">Makaleler</Link>
           <Link className="link-quiet" href="/mevzuat">Mevzuat</Link>
+          <Link className="link-quiet" href="/resmi-gazete">Resmî Gazete</Link>
           <Link className="link-quiet" href="/iletisim">İletişim</Link>
         </nav>
       </div>
