@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { SITE_NAME } from '@/lib/constants';
 import Link from 'next/link';
 import { connection } from 'next/server';
 import { VerificationBadge } from '@/components/verification-badge';
@@ -7,7 +8,7 @@ import { listLaws } from '@/lib/services/laws';
 export const metadata: Metadata = {
   title: 'Mevzuat kütüphanesi',
   description: 'Temel kanunlar ve resmî kaynak bağlantıları.',
-  openGraph: { title: 'Mevzuat kütüphanesi · Müessir', description: 'Temel kanunlar ve resmî kaynak bağlantıları.', siteName: 'Müessir', locale: 'tr_TR' },
+  openGraph: { title: `Mevzuat kütüphanesi · ${SITE_NAME}`, description: 'Temel kanunlar ve resmî kaynak bağlantıları.', siteName: SITE_NAME, locale: 'tr_TR' },
   alternates: { canonical: '/mevzuat' },
 };
 

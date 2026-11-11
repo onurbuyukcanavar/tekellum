@@ -1,4 +1,4 @@
-# Müessir'i yayına alma rehberi
+# Tekellüm'ü yayına alma rehberi
 
 Üç hizmet kullanılır: **GitHub** (kod; hazır), **Supabase** (veritabanı) ve **Vercel** (siteyi çalıştıran sunucu). Kendi bilgisayarınızda yalnızca bir kez, yönetici hesabını oluşturmak için komut çalıştırırsınız. Toplam süre yaklaşık 30–45 dakikadır.
 
@@ -7,7 +7,7 @@
 ## 1. Supabase: veritabanını hazırlayın
 
 1. [supabase.com](https://supabase.com) adresinde oturum açın. Eski sürüm için oluşturduğunuz bir proje varsa onu kullanabilirsiniz; yoksa **New project** düğmesine basın.
-   - **Name:** `muessir`
+   - **Name:** `tekellum`
    - **Database Password:** Güçlü bir parola belirleyin ve güvenli bir yere kaydedin. **Yalnızca harf ve rakam kullanın.** `@ # / ? %` gibi karakterler bağlantı adresini bozar.
    - **Region:** *Central EU (Frankfurt)*. Türkiye'ye en yakın bölge budur.
 2. Proje hazır olunca sayfanın üstündeki **Connect** düğmesine basın ve iki adresi kopyalayın:
@@ -26,7 +26,7 @@
 | `DATABASE_URL` | Transaction pooler adresi (6543) |
 | `DIRECT_URL` | Session pooler adresi (5432) |
 | `DATABASE_CA_CERT` | `prod-ca-2021.crt` dosyasının tüm içeriği |
-| `NEXT_PUBLIC_SITE_URL` | Sitenin adresi, ör. `https://muessir.vercel.app` (alan adı bağlayınca güncellenir) |
+| `NEXT_PUBLIC_SITE_URL` | Sitenin adresi, ör. `https://tekellum.vercel.app` (alan adı bağlayınca güncellenir) |
 
 - Eski `NEXT_PUBLIC_SUPABASE_URL` ve `NEXT_PUBLIC_SUPABASE_ANON_KEY` değişkenlerini silin; artık kullanılmıyorlar.
 - **Settings → Functions → Function Region** ayarını **Frankfurt (fra1)** yapın. Sunucu veritabanıyla aynı bölgede olunca sayfalar belirgin biçimde hızlı açılır.

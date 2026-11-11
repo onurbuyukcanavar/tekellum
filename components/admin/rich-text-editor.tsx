@@ -37,7 +37,7 @@ export function RichTextEditor({ initialContent, onChange, invalid, describedBy 
     content: initialContent || '',
     editorProps: {
       attributes: {
-        class: 'prose-muessir !text-[1.05rem]',
+        class: 'prose-tekellum !text-[1.05rem]',
         'aria-label': 'Makale metni',
         role: 'textbox',
         'aria-multiline': 'true',

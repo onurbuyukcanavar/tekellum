@@ -3,7 +3,7 @@
 import { spawnSync } from 'node:child_process';
 
 if (!process.env.DIRECT_URL && !process.env.DATABASE_URL) {
-  console.warn('[muessir] DATABASE_URL tanımlı değil; migration adımı atlandı. Site çalışmak için bu değişkene ihtiyaç duyar.');
+  console.warn('[tekellum] DATABASE_URL tanımlı değil; migration adımı atlandı. Site çalışmak için bu değişkene ihtiyaç duyar.');
   process.exit(0);
 }
 

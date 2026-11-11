@@ -25,7 +25,7 @@ export function pgConnectionConfig(connectionString: string): PoolConfig {
   if (!LOCAL_HOSTS.has(url.hostname) && !url.searchParams.has('sslmode') && !warned) {
     warned = true;
     console.warn(
-      '[muessir] Uyarı: DATABASE_CA_CERT tanımlı değil ve bağlantı adresinde sslmode yok; veritabanı bağlantısı şifrelenmeyebilir.',
+      '[tekellum] Uyarı: DATABASE_CA_CERT tanımlı değil ve bağlantı adresinde sslmode yok; veritabanı bağlantısı şifrelenmeyebilir.',
     );
   }
   return { connectionString };

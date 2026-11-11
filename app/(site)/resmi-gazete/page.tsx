@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { SITE_NAME } from '@/lib/constants';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { connection } from 'next/server';
@@ -13,7 +14,7 @@ const DESCRIPTION = 'Günlük Resmî Gazete: yönetmelikler, tebliğler, kararla
 export const metadata: Metadata = {
   title: 'Resmî Gazete',
   description: DESCRIPTION,
-  openGraph: { title: 'Resmî Gazete · Müessir', description: DESCRIPTION, siteName: 'Müessir', locale: 'tr_TR' },
+  openGraph: { title: `Resmî Gazete · ${SITE_NAME}`, description: DESCRIPTION, siteName: SITE_NAME, locale: 'tr_TR' },
   alternates: { canonical: '/resmi-gazete' },
 };
 

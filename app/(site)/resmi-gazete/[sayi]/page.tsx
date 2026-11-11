@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { SITE_NAME } from '@/lib/constants';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { connection } from 'next/server';
@@ -21,7 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title,
     description,
-    openGraph: { title: `${title} · Müessir`, description, siteName: 'Müessir', locale: 'tr_TR' },
+    openGraph: { title: `${title} · ${SITE_NAME}`, description, siteName: SITE_NAME, locale: 'tr_TR' },
     alternates: { canonical: `/resmi-gazete/${issue.slug}` },
   };
 }

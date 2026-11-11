@@ -29,7 +29,7 @@ export function ArticleView({ article }: { article: ArticleViewData }) {
         <span>{readingMinutes(html)} dk okuma</span>
       </div>
 
-      <div className="prose-muessir mt-10" dangerouslySetInnerHTML={{ __html: html }} />
+      <div className="prose-tekellum mt-10" dangerouslySetInnerHTML={{ __html: html }} />
 
       {article.lawRefs.length > 0 && (
         <aside className="mt-14 rounded-xl border border-line bg-paper-raised p-6" aria-labelledby="ilgili-mevzuat">

@@ -22,7 +22,7 @@ export const viewport: Viewport = {
 };
 
 // İlk boyamadan önce temayı uygular; böylece koyu temada beyaz yanıp sönme olmaz.
-const themeScript = `(function(){try{var t=localStorage.getItem('muessir-tema');var d=t?t==='koyu':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark')}catch(e){}})();`;
+const themeScript = `(function(){try{var t=localStorage.getItem('tekellum-tema')||localStorage.getItem('muessir-tema');var d=t?t==='koyu':window.matchMedia('(prefers-color-scheme: dark)').matches;if(d)document.documentElement.classList.add('dark')}catch(e){}})();`;
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (

@@ -1,10 +1,11 @@
 import type { Metadata } from 'next';
+import { SITE_NAME } from '@/lib/constants';
 import { CONTACT } from '@/lib/contact';
 
 export const metadata: Metadata = {
   title: 'İletişim',
   description: `${CONTACT.name} ile iletişim bilgileri.`,
-  openGraph: { title: 'İletişim · Müessir', description: `${CONTACT.name} ile iletişim bilgileri.`, siteName: 'Müessir', locale: 'tr_TR' },
+  openGraph: { title: `İletişim · ${SITE_NAME}`, description: `${CONTACT.name} ile iletişim bilgileri.`, siteName: SITE_NAME, locale: 'tr_TR' },
   alternates: { canonical: '/iletisim' },
 };
 

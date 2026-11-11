@@ -25,7 +25,7 @@ export default async function HomePage() {
           ve <span className="italic text-bronze">Gelecek</span>
         </h1>
         <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-soft">
-          Müessir; hukuk, düşünce ve metin üzerine makalelerin, çalışma notlarının ve mevzuat kaynaklarının bir araya
+          Tekellüm; hukuk, düşünce ve metin üzerine makalelerin, çalışma notlarının ve mevzuat kaynaklarının bir araya
           geldiği kişisel yayın platformudur.
         </p>
       </section>
