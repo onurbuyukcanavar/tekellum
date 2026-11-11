@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { CONTACT } from '@/lib/contact';
 
 export function SiteFooter() {
   return (
@@ -10,11 +11,15 @@ export function SiteFooter() {
             Bu sitedeki yazılar genel bilgilendirme ve düşünce paylaşımı amacı taşır; somut olaylara ilişkin hukuki
             danışmanlık yerine geçmez.
           </p>
+          <p className="pt-2 text-ink-soft">
+            {CONTACT.name} ·{' '}
+            <a className="link-quiet" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+          </p>
         </div>
         <nav aria-label="Alt menü" className="flex gap-5">
           <Link className="link-quiet" href="/makaleler">Makaleler</Link>
           <Link className="link-quiet" href="/mevzuat">Mevzuat</Link>
-          <Link className="link-quiet" href="/yonetim" rel="nofollow">Yönetim</Link>
+          <Link className="link-quiet" href="/iletisim">İletişim</Link>
         </nav>
       </div>
       <div className="container-page pb-8 text-xs text-muted">© {new Date().getFullYear()} Müessir</div>

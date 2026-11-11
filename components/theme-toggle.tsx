@@ -27,7 +27,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggle}
-      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-line text-ink-soft transition hover:border-bronze hover:text-bronze"
+      className="inline-flex h-8 w-8 shrink-0 items-center sm:h-9 sm:w-9 justify-center rounded-full border border-line text-ink-soft transition hover:border-bronze hover:text-bronze"
       aria-label={dark ? 'Açık temaya geç' : 'Koyu temaya geç'}
       title={dark ? 'Açık tema' : 'Koyu tema'}
     >
