@@ -24,6 +24,13 @@ const nextConfig: NextConfig = {
   async redirects() {
     // Eski (Supabase sürümü) İngilizce adresler kalıcı olarak yeni Türkçe adreslere yönlendirilir.
     return [
+      // Eski adres (muessir.vercel.app) kalıcı olarak yeni ada yönlenir; API uçları (zamanlanmış görevler) hariç.
+      {
+        source: '/:path((?!api/).*)',
+        has: [{ type: 'host', value: 'muessir.vercel.app' }],
+        destination: 'https://tekellum.vercel.app/:path',
+        permanent: true,
+      },
       { source: '/articles/:slug', destination: '/makaleler/:slug', permanent: true },
       { source: '/articles', destination: '/makaleler', permanent: true },
       { source: '/laws/:slug', destination: '/mevzuat/:slug', permanent: true },
