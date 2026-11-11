@@ -18,12 +18,6 @@ export default async function AdminMessagesPage() {
         description={`İletişim formundan gelen mesajlar${messages.length ? ` · ${messages.length} mesaj, ${unread} okunmamış` : ''}. Bir yıldan eski mesajlar otomatik silinir.`}
       />
 
-      {!mailOn && (
-        <p className="notice-warn mb-6">
-          E-posta bildirimi henüz açık değil: mesajlar yalnızca bu sayfada görünür. Açmak için Vercel&apos;de
-          <code className="mx-1">RESEND_API_KEY</code> ortam değişkenini tanımlayın.
-        </p>
-      )}
 
       {messages.length === 0 ? (
         <p className="notice">Henüz mesaj yok.</p>
@@ -48,7 +42,7 @@ export default async function AdminMessagesPage() {
                 <p className="mt-4 whitespace-pre-wrap break-words text-[0.95rem] leading-relaxed text-ink">{m.body}</p>
                 <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3">
                   <p className="text-xs">
-                    {m.emailedAt
+                    {!mailOn ? null : m.emailedAt
                       ? <span className="text-ok-ink">E-postayla iletildi · {formatDateTime(m.emailedAt)}</span>
                       : <span className="text-warn-ink" title={m.emailError ?? undefined}>E-postayla iletilemedi{m.emailError ? ` — ${m.emailError.slice(0, 120)}` : ''}</span>}
                   </p>

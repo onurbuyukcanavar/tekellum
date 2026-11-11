@@ -29,7 +29,7 @@ export default function ContactPage() {
 
       <section className="mt-12" aria-labelledby="mesaj-baslik">
         <h2 id="mesaj-baslik" className="text-2xl sm:text-3xl">Mesaj gönderin</h2>
-        <p className="mt-2 mb-6 text-ink-soft">Formu doldurmanız yeterli; mesajınız doğrudan e-posta kutuma ulaşır.</p>
+        <p className="mt-2 mb-6 text-ink-soft">Formu doldurmanız yeterli; mesajınız doğrudan bana ulaşır.</p>
         <div className="card relative p-5 sm:p-7">
           <ContactForm />
         </div>
