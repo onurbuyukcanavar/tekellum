@@ -65,7 +65,10 @@ jobs:
         run: |
           npm start &
           for i in $(seq 1 30); do curl -sf http://localhost:3000/api/health && break; sleep 1; done
-          curl -sf http://localhost:3000/ | grep -q 'Hukuku anlamak'
+          curl -sf http://localhost:3000/ | grep -q 'Gelenek, Usul'
           curl -sf http://localhost:3000/mevzuat | grep -q 'Türk Borçlar Kanunu'
           test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/yonetim)" = "307"
           test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/makaleler/olmayan-yazi)" = "404"
+          curl -sf http://localhost:3000/resmi-gazete | grep -q 'Resmî Gazete'
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/resmi-gazete/2026-02-30)" = "404"
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/api/cron/resmi-gazete)" = "401"
