@@ -6,13 +6,14 @@ import { usePathname } from 'next/navigation';
 const LINKS = [
   { href: '/makaleler', label: 'Makaleler' },
   { href: '/mevzuat', label: 'Mevzuat' },
+  { href: '/resmi-gazete', label: 'Resmî Gazete' },
   { href: '/iletisim', label: 'İletişim' },
 ];
 
-export function NavLinks() {
+export function NavLinks({ className = '', label = 'Ana menü' }: { className?: string; label?: string }) {
   const pathname = usePathname();
   return (
-    <nav aria-label="Ana menü" className="flex items-center sm:gap-2">
+    <nav aria-label={label} className={`flex items-center gap-1 lg:gap-2 ${className}`}>
       {LINKS.map((link) => {
         const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
         return (
@@ -20,7 +21,7 @@ export function NavLinks() {
             key={link.href}
             href={link.href}
             aria-current={active ? 'page' : undefined}
-            className={`rounded-md px-1 py-1.5 min-[400px]:px-1.5 text-[0.8125rem] font-medium max-[359px]:text-xs sm:px-2.5 sm:text-sm transition ${
+            className={`shrink-0 whitespace-nowrap rounded-md px-2.5 py-1.5 text-sm font-medium transition ${
               active ? 'text-bronze' : 'text-ink-soft hover:text-navy'
             }`}
           >

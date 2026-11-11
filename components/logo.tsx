@@ -5,7 +5,7 @@ import { SITE_TAGLINE } from '@/lib/constants';
 export function Logo({ compact = false }: { compact?: boolean }) {
   return (
     <Link href="/" className="group inline-flex flex-col leading-none" aria-label="Müessir ana sayfa">
-      <span className="font-serif text-base font-semibold tracking-[0.12em] min-[400px]:text-[1.125rem] min-[400px]:tracking-[0.18em] sm:text-[1.45rem] sm:tracking-[0.28em] text-navy transition group-hover:text-bronze">
+      <span className="font-serif text-[1.2rem] font-semibold tracking-[0.24em] sm:text-[1.45rem] sm:tracking-[0.28em] text-navy transition group-hover:text-bronze">
         MÜESSİR
       </span>
       {!compact && (

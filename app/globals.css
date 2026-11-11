@@ -212,7 +212,7 @@
     @apply my-2.5;
   }
   .law-body .law-section {
-    @apply mt-14 mb-4 scroll-mt-40 border-t border-line pt-8 text-center font-sans text-sm font-semibold uppercase tracking-[0.16em] text-navy;
+    @apply mt-14 mb-4 scroll-mt-44 border-t border-line pt-8 text-center font-sans text-sm font-semibold uppercase tracking-[0.16em] text-navy;
   }
   .law-body .law-section:first-child {
     @apply mt-0 border-t-0 pt-0;
@@ -221,7 +221,7 @@
     @apply mt-6 mb-1 font-sans text-[0.95rem] font-semibold text-navy;
   }
   .law-body .law-article {
-    @apply -mx-3 scroll-mt-40 rounded-md px-3 py-1 transition-colors;
+    @apply -mx-3 scroll-mt-44 rounded-md px-3 py-1 transition-colors;
   }
   .law-body .law-article:target,
   .law-body .law-article.is-target {
@@ -232,5 +232,48 @@
   }
   .law-body .law-note {
     @apply my-1.5 font-sans text-sm text-muted;
+  }
+
+  /* Resmî Gazete metinleri (lib/gazette/source.ts → cleanItemHtml çıktısı) */
+  .rg-body {
+    @apply font-serif text-[1.06rem] leading-[1.8] text-ink;
+    overflow-wrap: anywhere;
+  }
+  .rg-body p {
+    @apply my-2.5;
+  }
+  .rg-body .rg-c {
+    @apply text-center;
+  }
+  .rg-body .rg-r {
+    @apply text-right;
+  }
+  .rg-body .rg-b {
+    @apply font-semibold text-navy;
+  }
+  .rg-body > p.rg-c.rg-b {
+    @apply my-1 font-sans text-[0.95rem] tracking-wide;
+  }
+  .rg-body b,
+  .rg-body strong {
+    @apply font-semibold;
+  }
+  .rg-body img {
+    @apply mx-auto my-4 h-auto max-w-full rounded bg-white;
+  }
+  .rg-body .rg-table {
+    @apply my-6 overflow-x-auto;
+  }
+  .rg-body table {
+    @apply w-full border-collapse font-sans text-sm leading-snug;
+  }
+  .rg-body td,
+  .rg-body th {
+    @apply border border-line-strong px-2.5 py-1.5 align-top;
+    overflow-wrap: normal;
+  }
+  .rg-body td p,
+  .rg-body th p {
+    @apply my-0.5;
   }
 }
