@@ -21,6 +21,7 @@ export function SiteFooter() {
           <Link className="link-quiet" href="/makaleler">Makaleler</Link>
           <Link className="link-quiet" href="/mevzuat">Mevzuat</Link>
           <Link className="link-quiet" href="/resmi-gazete">Resmî Gazete</Link>
+          <Link className="link-quiet" href="/donusturucu">Dönüştürücü</Link>
           <Link className="link-quiet" href="/iletisim">İletişim</Link>
         </nav>
       </div>
