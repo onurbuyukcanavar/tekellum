@@ -17,7 +17,8 @@ export function ThemeToggle() {
     const next = !dark;
     document.documentElement.classList.toggle('dark', next);
     try {
-      localStorage.setItem('muessir-tema', next ? 'koyu' : 'acik');
+      localStorage.setItem('tekellum-tema', next ? 'koyu' : 'acik');
+      localStorage.removeItem('muessir-tema');
     } catch {
       /* gizli pencerede depolama kapalı olabilir */
     }

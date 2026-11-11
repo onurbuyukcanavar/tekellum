@@ -2,13 +2,13 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { connection } from 'next/server';
 import { ArticleCard } from '@/components/article-card';
-import { ARTICLE_CATEGORIES } from '@/lib/constants';
+import { ARTICLE_CATEGORIES, SITE_NAME } from '@/lib/constants';
 import { listPublishedArticles } from '@/lib/services/articles';
 
 export const metadata: Metadata = {
   title: 'Makaleler',
   description: 'Hukuk, düşünce ve metin üzerine yazılar.',
-  openGraph: { title: 'Makaleler · Müessir', description: 'Hukuk, düşünce ve metin üzerine yazılar.', siteName: 'Müessir', locale: 'tr_TR' },
+  openGraph: { title: `Makaleler · ${SITE_NAME}`, description: 'Hukuk, düşünce ve metin üzerine yazılar.', siteName: SITE_NAME, locale: 'tr_TR' },
   alternates: { canonical: '/makaleler' },
 };
 

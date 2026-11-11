@@ -1,5 +1,5 @@
 /**
- * Kayıtlı kanunların güncel (konsolide) metnini Mevzuat Bilgi Sistemi'nden alır, Müessir biçimine çevirir,
+ * Kayıtlı kanunların güncel (konsolide) metnini Mevzuat Bilgi Sistemi'nden alır, Tekellüm biçimine çevirir,
  * denetler ve "Doğrulandı" olarak kaydeder.
  *
  *   npm run mevzuat:aktar                       → tüm kanunlar
@@ -16,7 +16,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { createPrismaClient } from '../lib/prisma-client';
 import { articleLabels, convertMevzuatHtml, coverage, mbsTextUrl, parseMbsUrl, rawBodyText } from './mevzuat/donustur.mjs';
 
-const UA = 'Mozilla/5.0 (compatible; MuessirMevzuat/1.0; +https://muessir.vercel.app)';
+const UA = 'Mozilla/5.0 (compatible; TekellumMevzuat/1.0; +https://tekellum.vercel.app)';
 const MIN_COVERAGE = 0.999;
 
 async function fetchText(url: string, tries = 3): Promise<string> {

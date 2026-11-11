@@ -50,7 +50,7 @@ async function main() {
             excerpt: row.excerpt ?? '',
             content: toHtml(row.content ?? ''),
             category: row.category || 'Hukuk',
-            author: row.author || 'Müessir',
+            author: row.author || 'Tekellüm',
             status: row.status === 'published' ? 'YAYINDA' : 'TASLAK',
             featured: !!row.featured,
             publishedAt: row.published_at,

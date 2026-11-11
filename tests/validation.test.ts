@@ -4,7 +4,7 @@ import { articleInputSchema, lawInputSchema, loginSchema } from '@/lib/validatio
 
 const baseArticle = {
   title: 'Haksız Fiilde Kusur', slug: '', excerpt: '', content: '<p>x</p>', category: 'Hukuk',
-  author: 'Müessir', status: 'TASLAK', featured: false, lawRefs: [],
+  author: 'Tekellüm', status: 'TASLAK', featured: false, lawRefs: [],
 };
 
 describe('articleInputSchema', () => {

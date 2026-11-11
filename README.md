@@ -1,4 +1,4 @@
-# MÜESSİR
+# TEKELLÜM
 
 Hukuk, düşünce ve metin üzerine kişisel yayın platformu: makaleler, mevzuat kütüphanesi ve makale–kanun maddesi ilişkilendirmesi.
 
@@ -29,7 +29,7 @@ Hukuk, düşünce ve metin üzerine kişisel yayın platformu: makaleler, mevzua
 
 - Her yönetim sayfası ve her yazma işlemi, sunucuda veritabanı üzerinden oturumu doğrular (`requireAdmin`). `proxy.ts` yalnızca çerezsiz istekleri erkenden yönlendirir.
 - Parolalar Node'un yerleşik `scrypt` işleviyle özetlenir (N=2¹⁵, r=8, p=1). Oturum belirteci veritabanında yalnızca SHA-256 özeti olarak tutulur.
-- Üretimde çerez adı `__Host-muessir_oturum`'dur: `Secure`, `httpOnly`, `SameSite=Lax`, ömrü 7 gün.
+- Üretimde çerez adı `__Host-tekellum_oturum`'dur: `Secure`, `httpOnly`, `SameSite=Lax`, ömrü 7 gün.
 - Kaba kuvvet koruması: aynı e-posta için 15 dakikada 5, aynı IP için 20 başarısız denemeden sonra giriş kilitlenir.
 - Makale HTML'i kaydederken ve gösterirken beyaz listeyle temizlenir. Mevzuat metni HTML olarak yorumlanmaz.
 - Güvenlik başlıkları: HSTS, `X-Frame-Options: DENY`, `nosniff`, `Referrer-Policy`. Yönetim sayfaları `noindex` ve `no-store` başlıklarıyla sunulur.

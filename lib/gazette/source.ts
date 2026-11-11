@@ -7,7 +7,7 @@ import type { Element } from 'domhandler';
 import sanitizeHtml from 'sanitize-html';
 
 export const RG_ORIGIN = 'https://www.resmigazete.gov.tr';
-export const RG_USER_AGENT = 'Mozilla/5.0 (compatible; MuessirResmiGazete/1.0; +https://muessir.vercel.app)';
+export const RG_USER_AGENT = 'Mozilla/5.0 (compatible; TekellumResmiGazete/1.0; +https://tekellum.vercel.app)';
 
 // ---------------------------------------------------------------- tarih ve adresler
 

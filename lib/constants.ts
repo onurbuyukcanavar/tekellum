@@ -1,4 +1,4 @@
-export const SITE_NAME = 'Müessir';
+export const SITE_NAME = 'Tekellüm';
 export const SITE_TAGLINE = 'Veritas Et Iustitia';
 export const SITE_DESCRIPTION =
   'Hukuk, düşünce ve metin üzerine kişisel yayın platformu; makaleler, çalışma notları ve mevzuat kütüphanesi.';

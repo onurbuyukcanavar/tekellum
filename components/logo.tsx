@@ -1,12 +1,12 @@
 import Link from 'next/link';
-import { SITE_TAGLINE } from '@/lib/constants';
+import { SITE_NAME, SITE_TAGLINE } from '@/lib/constants';
 
 /** Tipografik logo: klişe hukuk sembolleri yerine harf aralıklı serif ad ve bronz çizgi. */
 export function Logo({ compact = false }: { compact?: boolean }) {
   return (
-    <Link href="/" className="group inline-flex flex-col leading-none" aria-label="Müessir ana sayfa">
+    <Link href="/" className="group inline-flex flex-col leading-none" aria-label={`${SITE_NAME} ana sayfa`}>
       <span className="font-serif text-[1.2rem] font-semibold tracking-[0.24em] sm:text-[1.45rem] sm:tracking-[0.28em] text-navy transition group-hover:text-bronze">
-        MÜESSİR
+        {SITE_NAME.toLocaleUpperCase('tr')}
       </span>
       {!compact && (
         <span lang="la" className="mt-1.5 hidden items-center gap-2 text-[0.62rem] sm:flex font-medium uppercase tracking-[0.3em] text-muted">

@@ -1,4 +1,4 @@
-// Müessir veri modeli.
+// Tekellüm veri modeli.
 // Tablo adları, eski Supabase tablolarıyla (articles, laws, admin_users) çakışmayacak şekilde seçildi;
 // aynı veritabanına kurulsa bile eski veriye dokunulmaz ve `npm run veri:aktar` ile taşınabilir.
 
@@ -65,7 +65,7 @@ model Article {
   /// Sunucuda temizlenmiş HTML (Tiptap çıktısı)
   content     String        @default("")
   category    String        @default("Hukuk")
-  author      String        @default("Müessir")
+  author      String        @default("Tekellüm")
   status      ArticleStatus @default(TASLAK)
   featured    Boolean       @default(false)
   publishedAt DateTime?     @map("published_at")

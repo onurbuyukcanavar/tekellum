@@ -5,9 +5,10 @@ import { Logo } from '@/components/logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { logoutAction } from '@/app/yonetim/actions';
 import { requireAdmin } from '@/lib/auth/session';
+import { SITE_NAME } from '@/lib/constants';
 
 export const metadata: Metadata = {
-  title: { default: 'Yönetim', template: '%s · Yönetim · Müessir' },
+  title: { default: 'Yönetim', template: `%s · Yönetim · ${SITE_NAME}` },
   robots: { index: false, follow: false },
 };
 

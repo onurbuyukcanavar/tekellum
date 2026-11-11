@@ -1,5 +1,5 @@
 /**
- * Mevzuat Bilgi Sistemi'nin (mevzuat.gov.tr) kanun metni HTML'ini Müessir'in sade metin biçimine çevirir.
+ * Mevzuat Bilgi Sistemi'nin (mevzuat.gov.tr) kanun metni HTML'ini Tekellüm'ün sade metin biçimine çevirir.
  *
  * Çıktı biçimi (satır başına bir blok):
  *   # BİRİNCİ KISIM — Genel Hükümler      → bölüm başlığı (içindekilerde görünür)

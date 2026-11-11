@@ -18,15 +18,15 @@ jobs:
       postgres:
         image: postgres:16
         env:
-          POSTGRES_USER: muessir
-          POSTGRES_PASSWORD: muessir
-          POSTGRES_DB: muessir
+          POSTGRES_USER: tekellum
+          POSTGRES_PASSWORD: tekellum
+          POSTGRES_DB: tekellum
         ports: ['5432:5432']
         options: >-
-          --health-cmd "pg_isready -U muessir" --health-interval 5s --health-timeout 5s --health-retries 10
+          --health-cmd "pg_isready -U tekellum" --health-interval 5s --health-timeout 5s --health-retries 10
     env:
-      DATABASE_URL: postgresql://muessir:muessir@localhost:5432/muessir
-      DIRECT_URL: postgresql://muessir:muessir@localhost:5432/muessir
+      DATABASE_URL: postgresql://tekellum:tekellum@localhost:5432/tekellum
+      DIRECT_URL: postgresql://tekellum:tekellum@localhost:5432/tekellum
       NEXT_PUBLIC_SITE_URL: http://localhost:3000
       NEXT_TELEMETRY_DISABLED: '1'
     steps:
