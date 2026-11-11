@@ -12,3 +12,7 @@ export function formatDateTime(value: Date | string | null | undefined): string 
   if (!value) return '';
   return dateTimeFormatter.format(new Date(value));
 }
+
+export function escapeHtml(value: string): string {
+  return value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}

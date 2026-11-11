@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { ARTICLE_CATEGORIES } from './constants';
 import { slugify } from './slug';
+import { CONTACT_LIMITS } from './contact';
 
 const trimmed = (max: number, label: string) =>
   z.string().trim().max(max, `${label} en fazla ${max} karakter olabilir.`);
@@ -83,3 +84,19 @@ export function fieldErrors(error: z.ZodError): Record<string, string> {
   }
   return out;
 }
+
+export const contactMessageSchema = z.object({
+  name: z.string().trim()
+    .min(CONTACT_LIMITS.name.min, 'Adınızı ve soyadınızı yazın.')
+    .max(CONTACT_LIMITS.name.max, `Ad soyad en fazla ${CONTACT_LIMITS.name.max} karakter olabilir.`)
+    .transform((v) => v.replace(/\s+/g, ' ')),
+  email: z.string().trim().toLowerCase().max(254, 'E-posta adresi çok uzun.').pipe(z.email('Geçerli bir e-posta adresi girin.')),
+  subject: z.string().trim()
+    .min(CONTACT_LIMITS.subject.min, 'Konuyu yazın.')
+    .max(CONTACT_LIMITS.subject.max, `Konu en fazla ${CONTACT_LIMITS.subject.max} karakter olabilir.`)
+    .transform((v) => v.replace(/\s+/g, ' ')),
+  body: z.string().trim()
+    .min(CONTACT_LIMITS.body.min, `Mesajınız en az ${CONTACT_LIMITS.body.min} karakter olmalı.`)
+    .max(CONTACT_LIMITS.body.max, `Mesajınız en fazla ${CONTACT_LIMITS.body.max} karakter olabilir.`)
+    .transform((v) => v.replace(/\r\n?/g, '\n')),
+});

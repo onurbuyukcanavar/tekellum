@@ -190,3 +190,19 @@ export async function importGazetteAction(_prev: FormState, formData: FormData):
   ].filter(Boolean);
   return { ok: !errors.length, message: parts.join(' ') };
 }
+
+// ---------------------------------------------------------------- iletişim mesajları
+
+export async function messageAction(formData: FormData): Promise<void> {
+  await requireAdmin();
+  const { deleteContactMessage, resendContactMessage, setMessageRead } = await import('@/lib/services/contact');
+  const id = String(formData.get('id') ?? '').slice(0, 40);
+  const op = String(formData.get('op') ?? '');
+  if (!id) return;
+  if (op === 'okundu') await setMessageRead(id, true);
+  else if (op === 'okunmadi') await setMessageRead(id, false);
+  else if (op === 'sil') await deleteContactMessage(id);
+  else if (op === 'yeniden-gonder') await resendContactMessage(id);
+  revalidatePath('/yonetim/mesajlar');
+  revalidatePath('/yonetim');
+}
