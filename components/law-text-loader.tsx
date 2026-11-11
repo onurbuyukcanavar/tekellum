@@ -51,7 +51,7 @@ export function LawTextLoader({ src, officialUrl, articleCount }: { src: string;
 
   return (
     <div>
-      <form onSubmit={goTo} className="sticky top-[91px] z-20 sm:top-[115px] md:top-20 -mx-3 mb-6 flex flex-wrap items-center gap-2 rounded-lg border border-line bg-paper/95 px-3 py-2 backdrop-blur" role="search">
+      <form onSubmit={goTo} className="sticky top-[91px] z-20 sm:top-[115px] lg:top-20 -mx-3 mb-6 flex flex-wrap items-center gap-2 rounded-lg border border-line bg-paper/95 px-3 py-2 backdrop-blur" role="search">
         <label htmlFor="madde-ara" className="text-sm text-muted">Maddeye git</label>
         <input
           id="madde-ara"

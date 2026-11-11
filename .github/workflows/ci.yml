@@ -72,3 +72,7 @@ jobs:
           curl -sf http://localhost:3000/resmi-gazete | grep -q 'Resmî Gazete'
           test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/resmi-gazete/2026-02-30)" = "404"
           test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/api/cron/resmi-gazete)" = "401"
+          curl -sf http://localhost:3000/donusturucu/udf-pdf | grep -q 'UDF → PDF'
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/donusturucu/yok)" = "404"
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/fonts/LiberationSerif-Regular.ttf)" = "200"
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/vendor/pdf.worker.min.mjs)" = "200"
