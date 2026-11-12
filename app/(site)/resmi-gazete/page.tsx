@@ -1,3 +1,4 @@
+import { DEFAULT_OG_IMAGES } from '@/lib/og/defaults';
 import type { Metadata } from 'next';
 import { SITE_NAME } from '@/lib/constants';
 import Link from 'next/link';
@@ -14,7 +15,7 @@ const DESCRIPTION = 'Günlük Resmî Gazete: yönetmelikler, tebliğler, kararla
 export const metadata: Metadata = {
   title: 'Resmî Gazete',
   description: DESCRIPTION,
-  openGraph: { title: `Resmî Gazete · ${SITE_NAME}`, description: DESCRIPTION, siteName: SITE_NAME, locale: 'tr_TR' },
+  openGraph: { images: DEFAULT_OG_IMAGES, title: `Resmî Gazete · ${SITE_NAME}`, description: DESCRIPTION, siteName: SITE_NAME, locale: 'tr_TR' },
   alternates: { canonical: '/resmi-gazete' },
 };
 

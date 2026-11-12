@@ -1,3 +1,4 @@
+import { DEFAULT_OG_IMAGES } from '@/lib/og/defaults';
 import type { Metadata } from 'next';
 import { ContactForm } from '@/components/contact-form';
 import { SITE_NAME } from '@/lib/constants';
@@ -8,7 +9,7 @@ const DESCRIPTION = `${CONTACT.name} ile iletişim: e-posta, LinkedIn ve iletiş
 export const metadata: Metadata = {
   title: 'İletişim',
   description: DESCRIPTION,
-  openGraph: { title: `İletişim · ${SITE_NAME}`, description: DESCRIPTION, siteName: SITE_NAME, locale: 'tr_TR' },
+  openGraph: { images: DEFAULT_OG_IMAGES, title: `İletişim · ${SITE_NAME}`, description: DESCRIPTION, siteName: SITE_NAME, locale: 'tr_TR' },
   alternates: { canonical: '/iletisim' },
 };
 

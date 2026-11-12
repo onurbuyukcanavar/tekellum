@@ -1,3 +1,4 @@
+import { DEFAULT_OG_IMAGES } from '@/lib/og/defaults';
 import type { Metadata } from 'next';
 import { SITE_NAME } from '@/lib/constants';
 import Link from 'next/link';
@@ -8,7 +9,7 @@ import { listLaws } from '@/lib/services/laws';
 export const metadata: Metadata = {
   title: 'Mevzuat kütüphanesi',
   description: 'Temel kanunlar ve resmî kaynak bağlantıları.',
-  openGraph: { title: `Mevzuat kütüphanesi · ${SITE_NAME}`, description: 'Temel kanunlar ve resmî kaynak bağlantıları.', siteName: SITE_NAME, locale: 'tr_TR' },
+  openGraph: { images: DEFAULT_OG_IMAGES, title: `Mevzuat kütüphanesi · ${SITE_NAME}`, description: 'Temel kanunlar ve resmî kaynak bağlantıları.', siteName: SITE_NAME, locale: 'tr_TR' },
   alternates: { canonical: '/mevzuat' },
 };
 
