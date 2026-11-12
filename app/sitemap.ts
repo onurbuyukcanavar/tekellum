@@ -21,6 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${base}/donusturucu`, changeFrequency: 'monthly', priority: 0.7 },
     ...TOOLS.map((t) => ({ url: `${base}/donusturucu/${t.id}`, changeFrequency: 'monthly' as const, priority: 0.6 })),
     { url: `${base}/iletisim`, changeFrequency: 'yearly', priority: 0.3 },
+    { url: `${base}/gizlilik`, changeFrequency: 'yearly', priority: 0.2 },
     ...articles.map((a) => ({ url: `${base}/makaleler/${a.slug}`, lastModified: a.updatedAt, priority: 0.7 })),
     ...laws.map((l) => ({ url: `${base}/mevzuat/${l.slug}`, lastModified: l.updatedAt, priority: 0.5 })),
     ...gazette.flatMap((issue) => [
