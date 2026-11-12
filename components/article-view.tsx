@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { formatDate } from '@/lib/format';
 import { provisionAnchor } from '@/lib/law-text';
 import { readingMinutes, sanitizeArticleHtml } from '@/lib/sanitize';
+import { buildToc } from '@/lib/toc';
+import { ArticleTocInline, ArticleTocSidebar } from './article-toc';
 
 type LawRef = { id: string; provision: string; law: { title: string; slug: string; shortName: string; lawNumber: string } };
 export type ArticleViewData = {
@@ -11,9 +13,11 @@ export type ArticleViewData = {
 
 /** Makale gövdesi: hem herkese açık sayfa hem de yönetimdeki önizleme kullanır. */
 export function ArticleView({ article }: { article: ArticleViewData }) {
-  const html = sanitizeArticleHtml(article.content);
-  return (
-    <article className="container-page max-w-3xl pt-14">
+  const { html, toc } = buildToc(sanitizeArticleHtml(article.content));
+  // Tek başlıklı ya da başlıksız yazılarda içindekiler gösterilmez.
+  const hasToc = toc.length >= 2;
+  const body = (
+    <article className={hasToc ? 'min-w-0' : 'container-page max-w-3xl pt-14'}>
       <p className="eyebrow">{article.category}</p>
       <h1 className="mt-4 text-4xl leading-[1.15] sm:text-5xl">{article.title}</h1>
       {article.excerpt && <p className="mt-6 font-serif text-xl leading-relaxed text-ink-soft">{article.excerpt}</p>}
@@ -28,6 +32,12 @@ export function ArticleView({ article }: { article: ArticleViewData }) {
         <span aria-hidden>·</span>
         <span>{readingMinutes(html)} dk okuma</span>
       </div>
+
+      {hasToc && (
+        <div className="mt-8 lg:hidden">
+          <ArticleTocInline toc={toc} />
+        </div>
+      )}
 
       <div className="prose-tekellum mt-10" dangerouslySetInnerHTML={{ __html: html }} />
 
@@ -57,5 +67,15 @@ export function ArticleView({ article }: { article: ArticleViewData }) {
         Bu yazı genel bilgilendirme ve düşünce paylaşımı amacı taşır; somut olaylara ilişkin hukuki danışmanlık yerine geçmez.
       </p>
     </article>
+  );
+
+  if (!hasToc) return body;
+  return (
+    <div className="container-page pt-14 lg:grid lg:grid-cols-[minmax(0,48rem)_14rem] lg:justify-center lg:gap-12 xl:grid-cols-[minmax(0,48rem)_16rem] xl:gap-16">
+      {body}
+      <div className="hidden lg:block">
+        <ArticleTocSidebar toc={toc} />
+      </div>
+    </div>
   );
 }
