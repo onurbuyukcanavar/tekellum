@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { connection } from 'next/server';
 import { ArticleCard } from '@/components/article-card';
+import { DailyCalendar } from '@/components/home/daily-calendar';
 import { formatDate } from '@/lib/format';
 import { formatGazetteDate, supplementLabel } from '@/lib/gazette/format';
 import { getFeaturedArticle, listPublishedArticles } from '@/lib/services/articles';
@@ -17,17 +18,20 @@ export default async function HomePage() {
 
   return (
     <>
-      <section className="container-page pt-16 pb-14 sm:pt-24 sm:pb-20">
-        <p className="eyebrow">Bağımsız hukuk ve düşünce yayını</p>
-        <h1 className="mt-5 max-w-3xl text-4xl leading-[1.12] sm:text-6xl">
-          Gelenek, Usul
-          <br />
-          ve <span className="italic text-bronze">Gelecek</span>
-        </h1>
-        <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-soft">
-          Tekellüm; hukuk, düşünce ve metin üzerine makalelerin, çalışma notlarının ve mevzuat kaynaklarının bir araya
-          geldiği kişisel yayın platformudur.
-        </p>
+      <section className="container-page grid gap-12 pt-16 pb-14 sm:pt-24 sm:pb-20 lg:grid-cols-[minmax(0,1fr)_22rem] lg:items-center lg:gap-16">
+        <div>
+          <p className="eyebrow">Bağımsız hukuk ve düşünce yayını</p>
+          <h1 className="mt-5 max-w-3xl text-4xl leading-[1.12] sm:text-6xl">
+            Gelenek, Usul
+            <br />
+            ve <span className="italic text-bronze">Gelecek</span>
+          </h1>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-soft">
+            Tekellüm; hukuk, düşünce ve metin üzerine makalelerin, çalışma notlarının ve mevzuat kaynaklarının bir araya
+            geldiği kişisel yayın platformudur.
+          </p>
+        </div>
+        <DailyCalendar />
       </section>
 
       {lead && (
