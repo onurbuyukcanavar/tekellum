@@ -14,7 +14,8 @@ export function SiteFooter() {
           </p>
           <p className="pt-2 text-ink-soft">
             {CONTACT.name} ·{' '}
-            <a className="link-quiet" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a>
+            <a className="link-quiet" href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a> ·{' '}
+            <a className="link-quiet" href={CONTACT.linkedin.url} target="_blank" rel="noopener noreferrer me">LinkedIn</a>
           </p>
         </div>
         <nav aria-label="Alt menü" className="flex flex-wrap gap-x-5 gap-y-2">
