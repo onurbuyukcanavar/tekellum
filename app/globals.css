@@ -179,7 +179,94 @@
     content: none;
   }
   .prose-tekellum :where(table) {
-    @apply font-sans text-base;
+    @apply my-0 font-sans text-base;
+  }
+  /* Tablolar: dar ekranda yatay kaydırılır, hücreler çerçeveli. */
+  .prose-tekellum .table-wrap {
+    @apply my-8 overflow-x-auto rounded-lg border border-line;
+  }
+  .prose-tekellum .table-wrap table {
+    @apply w-full min-w-[32rem] border-collapse;
+  }
+  .prose-tekellum .table-wrap :where(th, td) {
+    @apply border border-line px-3 py-2 align-top;
+  }
+  .prose-tekellum .table-wrap :where(th) {
+    @apply bg-paper-raised font-semibold text-navy;
+  }
+  .prose-tekellum .table-wrap :where(th, td) > :where(p) {
+    @apply my-0;
+  }
+  .prose-tekellum .table-wrap tr > :first-child { border-left: 0; }
+  .prose-tekellum .table-wrap tr > :last-child { border-right: 0; }
+  .prose-tekellum .table-wrap thead tr:first-child > *,
+  .prose-tekellum .table-wrap tbody tr:first-child > * { border-top: 0; }
+  .prose-tekellum .table-wrap tr:last-child > * { border-bottom: 0; }
+
+  /* Vurgu (fosforlu kalem) */
+  .prose-tekellum :where(mark) {
+    @apply rounded-sm px-0.5 text-ink;
+    background-color: color-mix(in oklab, var(--bronze-soft) 35%, transparent);
+  }
+
+  /* Görseller ve altyazıları */
+  .prose-tekellum :where(figure[data-image]) {
+    @apply mx-auto my-8;
+  }
+  .prose-tekellum :where(figure[data-size='orta']) { @apply max-w-[75%]; }
+  .prose-tekellum :where(figure[data-size='kucuk']) { @apply max-w-[45%]; }
+  .prose-tekellum :where(figure[data-image] img) {
+    @apply my-0 h-auto w-full rounded-md border border-line;
+  }
+  .prose-tekellum :where(figcaption) {
+    @apply mt-2 text-center font-sans text-sm text-muted;
+  }
+
+  /* Not kutusu */
+  .prose-tekellum :where(aside[data-callout]) {
+    @apply my-8 rounded-lg border border-line border-l-4 border-l-navy/50 bg-paper-raised px-5 py-1;
+  }
+  .prose-tekellum :where(aside[data-callout='onemli']) {
+    @apply border-l-bronze;
+    background-color: color-mix(in oklab, var(--bronze-soft) 10%, var(--paper-raised));
+  }
+  .prose-tekellum :where(aside[data-callout])::before {
+    @apply mt-3 -mb-1 block font-sans text-xs font-semibold uppercase tracking-[0.18em] text-navy/70;
+    content: 'Not';
+  }
+  .prose-tekellum :where(aside[data-callout='onemli'])::before {
+    @apply text-bronze;
+    content: 'Önemli';
+  }
+
+  /* Dipnotlar */
+  .prose-tekellum .fn-ref {
+    @apply ml-0.5 font-sans text-[0.7em] leading-none;
+  }
+  .prose-tekellum .fn-ref a {
+    @apply font-semibold text-bronze no-underline hover:underline;
+  }
+  .prose-tekellum .fn-ref:target a,
+  .prose-tekellum .footnotes li:target {
+    @apply rounded bg-bronze/15;
+  }
+  .prose-tekellum .footnotes {
+    @apply mt-14 border-t border-line pt-6 font-sans text-[0.92rem] leading-relaxed text-ink-soft;
+  }
+  .prose-tekellum .footnotes h2 {
+    @apply mt-0 mb-3 font-sans text-xs font-semibold uppercase tracking-[0.2em] text-bronze;
+  }
+  .prose-tekellum .footnotes ol {
+    @apply my-0;
+  }
+  .prose-tekellum .footnotes li {
+    @apply my-1.5 scroll-mt-28 px-1 sm:scroll-mt-36 lg:scroll-mt-28;
+  }
+  .prose-tekellum .fn-ref {
+    @apply scroll-mt-32 sm:scroll-mt-40 lg:scroll-mt-32;
+  }
+  .prose-tekellum .fn-back {
+    @apply no-underline;
   }
 
   /* Tiptap editör alanı */
@@ -203,6 +290,32 @@
   .tiptap-content .ProseMirror .selectedCell::after {
     content: '';
     @apply pointer-events-none absolute inset-0 bg-bronze/15;
+  }
+  /* Editörde dipnotlar sırayla numaralanır (yayındaki gibi). */
+  .tiptap-content .ProseMirror {
+    counter-reset: dipnot;
+  }
+  .tiptap-content .ProseMirror sup[data-footnote] {
+    counter-increment: dipnot;
+    @apply ml-0.5 cursor-pointer rounded-sm bg-bronze/15 px-1 font-sans text-[0.7em] font-semibold text-bronze;
+  }
+  .tiptap-content .ProseMirror sup[data-footnote]::after {
+    content: counter(dipnot);
+  }
+  .tiptap-content .ProseMirror .ProseMirror-selectednode {
+    @apply outline-2 outline-offset-2 outline-bronze;
+  }
+  .tiptap-content .ProseMirror figure[data-image] {
+    @apply cursor-pointer;
+  }
+  .tiptap-content .ProseMirror aside[data-callout] > :first-child {
+    @apply mt-2;
+  }
+  .tiptap-content .ProseMirror mark {
+    @apply text-ink;
+  }
+  [data-fullscreen] .tiptap-content .ProseMirror {
+    @apply min-h-[70vh] text-[1.12rem];
   }
   .tiptap-content .ProseMirror .column-resize-handle {
     @apply pointer-events-none absolute -right-0.5 top-0 bottom-0 w-1 bg-bronze;

@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { formatDate } from '@/lib/format';
 import { provisionAnchor } from '@/lib/law-text';
-import { readingMinutes, sanitizeArticleHtml } from '@/lib/sanitize';
-import { buildToc } from '@/lib/toc';
+import { renderArticleHtml } from '@/lib/article-render';
+import { readingMinutes } from '@/lib/sanitize';
 import { ArticleTocInline, ArticleTocSidebar } from './article-toc';
 
 type LawRef = { id: string; provision: string; law: { title: string; slug: string; shortName: string; lawNumber: string } };
@@ -13,7 +13,7 @@ export type ArticleViewData = {
 
 /** Makale gövdesi: hem herkese açık sayfa hem de yönetimdeki önizleme kullanır. */
 export function ArticleView({ article }: { article: ArticleViewData }) {
-  const { html, toc } = buildToc(sanitizeArticleHtml(article.content));
+  const { html, toc } = renderArticleHtml(article.content);
   // Tek başlıklı ya da başlıksız yazılarda içindekiler gösterilmez.
   const hasToc = toc.length >= 2;
   const body = (
