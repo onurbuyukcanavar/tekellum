@@ -161,6 +161,13 @@
   .prose-tekellum :where(h2, h3)[id] {
     @apply scroll-mt-28 outline-none sm:scroll-mt-36 lg:scroll-mt-28;
   }
+  .prose-tekellum :where(code)::before,
+  .prose-tekellum :where(code)::after {
+    content: none;
+  }
+  .prose-tekellum :where(code) {
+    @apply rounded bg-line/50 px-1 py-0.5 text-[0.85em] font-medium;
+  }
   .prose-tekellum :where(a) {
     @apply decoration-bronze/60 underline-offset-4 hover:text-bronze;
   }

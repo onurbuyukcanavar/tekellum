@@ -26,7 +26,10 @@ export function SiteFooter() {
           <Link className="link-quiet" href="/iletisim">İletişim</Link>
         </nav>
       </div>
-      <div className="container-page pb-8 text-xs text-muted">© {new Date().getFullYear()} {SITE_NAME}</div>
+      <div className="container-page flex flex-wrap items-center justify-between gap-x-6 gap-y-2 pb-8 text-xs text-muted">
+        <span>© {new Date().getFullYear()} {SITE_NAME}</span>
+        <Link className="link-quiet" href="/gizlilik">Gizlilik ve Çerezler</Link>
+      </div>
     </footer>
   );
 }
