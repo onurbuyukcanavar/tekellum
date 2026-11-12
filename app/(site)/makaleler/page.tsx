@@ -1,3 +1,4 @@
+import { DEFAULT_OG_IMAGES } from '@/lib/og/defaults';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { connection } from 'next/server';
@@ -8,7 +9,7 @@ import { listPublishedArticles } from '@/lib/services/articles';
 export const metadata: Metadata = {
   title: 'Makaleler',
   description: 'Hukuk, düşünce ve metin üzerine yazılar.',
-  openGraph: { title: `Makaleler · ${SITE_NAME}`, description: 'Hukuk, düşünce ve metin üzerine yazılar.', siteName: SITE_NAME, locale: 'tr_TR' },
+  openGraph: { images: DEFAULT_OG_IMAGES, title: `Makaleler · ${SITE_NAME}`, description: 'Hukuk, düşünce ve metin üzerine yazılar.', siteName: SITE_NAME, locale: 'tr_TR' },
   alternates: { canonical: '/makaleler' },
 };
 

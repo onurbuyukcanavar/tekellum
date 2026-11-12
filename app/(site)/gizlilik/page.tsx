@@ -1,3 +1,4 @@
+import { DEFAULT_OG_IMAGES } from '@/lib/og/defaults';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { SITE_NAME } from '@/lib/constants';
@@ -9,7 +10,7 @@ const UPDATED = '12 Kasım 2026';
 export const metadata: Metadata = {
   title: 'Gizlilik ve Çerezler',
   description: DESCRIPTION,
-  openGraph: { title: `Gizlilik ve Çerezler · ${SITE_NAME}`, description: DESCRIPTION, siteName: SITE_NAME, locale: 'tr_TR' },
+  openGraph: { images: DEFAULT_OG_IMAGES, title: `Gizlilik ve Çerezler · ${SITE_NAME}`, description: DESCRIPTION, siteName: SITE_NAME, locale: 'tr_TR' },
   alternates: { canonical: '/gizlilik' },
 };
 

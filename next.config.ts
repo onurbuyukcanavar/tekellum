@@ -11,6 +11,8 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
+  // Paylaşım görselleri (opengraph-image) yazı tiplerini diskten okur; dağıtım paketine dahil edilmeli.
+  outputFileTracingIncludes: { '/**': ['./assets/og/*.woff', './assets/og/*.ttf'] },
   experimental: {
     // Word (.docx) dosyalarından gelen uzun makaleler için sunucu işlemi gövde sınırı.
     serverActions: { bodySizeLimit: '5mb' },
