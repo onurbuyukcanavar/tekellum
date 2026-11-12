@@ -177,3 +177,16 @@ model ContactMessage {
   @@index([ipHash, createdAt])
   @@map("contact_message")
 }
+
+/// Makalelere eklenen görseller. Editörde yüklenir (istemcide küçültülmüş hâliyle), /gorsel/{id} adresinden sunulur.
+model ArticleImage {
+  id        String   @id @default(cuid())
+  mime      String
+  width     Int
+  height    Int
+  size      Int
+  data      Bytes
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("article_image")
+}

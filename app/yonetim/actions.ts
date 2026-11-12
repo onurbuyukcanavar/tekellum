@@ -206,3 +206,21 @@ export async function messageAction(formData: FormData): Promise<void> {
   revalidatePath('/yonetim/mesajlar');
   revalidatePath('/yonetim');
 }
+
+// ---------------------------------------------------------------- makale görselleri
+
+export type UploadImageResult = { ok: true; src: string; width: number; height: number } | { ok: false; error: string };
+
+export async function uploadArticleImageAction(formData: FormData): Promise<UploadImageResult> {
+  await requireAdmin();
+  const { saveArticleImage, IMAGE_MAX_BYTES } = await import('@/lib/services/images');
+  const file = formData.get('file');
+  if (!(file instanceof File) || file.size === 0) return { ok: false, error: 'Görsel seçilmedi.' };
+  if (file.size > IMAGE_MAX_BYTES) return { ok: false, error: 'Görsel en fazla 4 MB olabilir.' };
+  try {
+    const saved = await saveArticleImage(new Uint8Array(await file.arrayBuffer()), Number(formData.get('width')), Number(formData.get('height')));
+    return { ok: true, src: saved.src, width: saved.width, height: saved.height };
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error.message : 'Görsel kaydedilemedi.' };
+  }
+}

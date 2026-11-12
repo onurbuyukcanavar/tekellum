@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useActionState, useState } from 'react';
+import { useActionState, useEffect, useRef, useState } from 'react';
 import { saveArticleAction, type FormState } from '@/app/yonetim/actions';
 import { ARTICLE_CATEGORIES } from '@/lib/constants';
 import { slugify } from '@/lib/slug';
@@ -33,6 +33,68 @@ export function ArticleForm({ initial, lawOptions }: { initial: ArticleFormValue
   const set = <K extends keyof ArticleFormValues>(key: K, value: ArticleFormValues[K]) =>
     setValues((v) => ({ ...v, [key]: value }));
 
+  // --- Kaydedilmemiş değişikliklerin korunması -------------------------------------------
+  // Metin bu tarayıcıda birkaç saniyede bir saklanır; sayfa yanlışlıkla kapanırsa geri yüklenebilir.
+  const draftKey = `tekellum-taslak:${initial.id ?? 'yeni'}`;
+  const [editorKey, setEditorKey] = useState(0);
+  const [offer, setOffer] = useState<Draft | null>(null);
+  const [savedAt, setSavedAt] = useState<string | null>(null);
+  const submitting = useRef(false);
+  const dirty = values.title !== initial.title || values.excerpt !== initial.excerpt || values.content !== initial.content;
+
+  useEffect(() => {
+    const draft = readDraft(draftKey);
+    if (draft && (draft.title !== initial.title || draft.excerpt !== initial.excerpt || draft.content !== initial.content)) {
+      // Taslak yalnızca ilk yüklemede okunur.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setOffer(draft);
+    } else if (draft) {
+      removeDraft(draftKey);
+    }
+  }, [draftKey, initial.title, initial.excerpt, initial.content]);
+
+  useEffect(() => {
+    if (!dirty || offer) return;
+    const t = setTimeout(() => {
+      const at = new Date().toISOString();
+      try {
+        localStorage.setItem(draftKey, JSON.stringify({ title: values.title, excerpt: values.excerpt, content: values.content, at }));
+        setSavedAt(at);
+      } catch { /* depolama dolu ya da kapalı */ }
+    }, 1500);
+    return () => clearTimeout(t);
+  }, [dirty, offer, draftKey, values.title, values.excerpt, values.content]);
+
+  const latest = useRef(values);
+  useEffect(() => { latest.current = values; });
+
+  useEffect(() => {
+    // Kaydetme başarısız olduysa (doğrulama hatası) taslak yeniden yedeklenir ve çıkış uyarısı devreye girer.
+    if (!submitting.current) return;
+    submitting.current = false;
+    const v = latest.current;
+    try { localStorage.setItem(draftKey, JSON.stringify({ title: v.title, excerpt: v.excerpt, content: v.content, at: new Date().toISOString() })); } catch { /* yok say */ }
+  }, [state, draftKey]);
+
+  useEffect(() => {
+    const onBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (dirty && !submitting.current) { e.preventDefault(); e.returnValue = ''; }
+    };
+    window.addEventListener('beforeunload', onBeforeUnload);
+    return () => window.removeEventListener('beforeunload', onBeforeUnload);
+  }, [dirty]);
+
+  function restoreDraft() {
+    if (!offer) return;
+    setValues((v) => ({ ...v, title: offer.title, excerpt: offer.excerpt, content: offer.content }));
+    setEditorKey((k) => k + 1);
+    setOffer(null);
+  }
+  function discardDraft() {
+    removeDraft(draftKey);
+    setOffer(null);
+  }
+
   function addRef() {
     if (!refLaw) return;
     const provision = refProvision.trim();
@@ -47,12 +109,24 @@ export function ArticleForm({ initial, lawOptions }: { initial: ArticleFormValue
   };
 
   return (
-    <form action={action} className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]" noValidate>
+    <form action={action} onSubmit={() => { submitting.current = true; removeDraft(draftKey); }} className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]" noValidate>
       {values.id && <input type="hidden" name="id" value={values.id} />}
       <input type="hidden" name="content" value={values.content} />
       <input type="hidden" name="lawRefs" value={JSON.stringify(values.lawRefs)} />
 
       <div className="min-w-0 space-y-6">
+        {offer && (
+          <div className="notice-warn flex flex-wrap items-center justify-between gap-3" role="alert">
+            <span>
+              Bu tarayıcıda kaydedilmemiş bir taslak bulundu
+              {offer.at ? ` (${new Date(offer.at).toLocaleString('tr-TR', { dateStyle: 'medium', timeStyle: 'short' })})` : ''}.
+            </span>
+            <span className="flex gap-2">
+              <button type="button" className="btn !px-3 !py-1.5" onClick={restoreDraft}>Geri yükle</button>
+              <button type="button" className="btn-secondary !px-3 !py-1.5" onClick={discardDraft}>Yok say</button>
+            </span>
+          </div>
+        )}
         {state.message && <p className="notice-warn" role="alert">{state.message}</p>}
         <div>
           <label htmlFor="title" className="field-label">Başlık</label>
@@ -90,13 +164,21 @@ export function ArticleForm({ initial, lawOptions }: { initial: ArticleFormValue
         <div>
           <span className="field-label" id="content-label">Makale metni</span>
           <RichTextEditor
-            initialContent={initial.content}
+            key={editorKey}
+            initialContent={values.content}
             onChange={(html) => set('content', html)}
             invalid={!!errors.content}
             describedBy={errors.content ? 'content-error' : undefined}
           />
           <FieldError id="content-error" message={errors.content} />
-          <p className="field-hint">Kaydetme otomatik değildir; değişiklikleri sağdaki düğmeyle kaydedin.</p>
+          <p className="field-hint">
+            Değişiklikler yayına ancak sağdaki düğmeyle kaydedildiğinde yansır.{' '}
+            {dirty
+              ? savedAt
+                ? `Kaydedilmemiş değişiklikler bu tarayıcıda yedeklendi (${new Date(savedAt).toLocaleTimeString('tr-TR', { timeStyle: 'short' })}).`
+                : 'Kaydedilmemiş değişiklikler var.'
+              : ''}
+          </p>
         </div>
       </div>
 
@@ -216,4 +298,19 @@ export function ArticleForm({ initial, lawOptions }: { initial: ArticleFormValue
       </aside>
     </form>
   );
+}
+
+type Draft = { title: string; excerpt: string; content: string; at?: string };
+
+function readDraft(key: string): Draft | null {
+  try {
+    const v = JSON.parse(localStorage.getItem(key) ?? 'null');
+    return v && typeof v.content === 'string' && typeof v.title === 'string' ? { excerpt: '', ...v } : null;
+  } catch {
+    return null;
+  }
+}
+
+function removeDraft(key: string) {
+  try { localStorage.removeItem(key); } catch { /* yok say */ }
 }

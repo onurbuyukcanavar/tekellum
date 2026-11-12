@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   experimental: {
     // Word (.docx) dosyalarından gelen uzun makaleler için sunucu işlemi gövde sınırı.
-    serverActions: { bodySizeLimit: '4mb' },
+    serverActions: { bodySizeLimit: '5mb' },
   },
   async headers() {
     return [
