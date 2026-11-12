@@ -4,6 +4,7 @@ import { provisionAnchor } from '@/lib/law-text';
 import { renderArticleHtml } from '@/lib/article-render';
 import { readingMinutes } from '@/lib/sanitize';
 import { ArticleTocInline, ArticleTocSidebar } from './article-toc';
+import { ShareButtons } from './share-buttons';
 
 type LawRef = { id: string; provision: string; law: { title: string; slug: string; shortName: string; lawNumber: string } };
 export type ArticleViewData = {
@@ -12,7 +13,8 @@ export type ArticleViewData = {
 };
 
 /** Makale gövdesi: hem herkese açık sayfa hem de yönetimdeki önizleme kullanır. */
-export function ArticleView({ article }: { article: ArticleViewData }) {
+/** shareUrl verilmezse (ör. yönetim önizlemesi) paylaşım düğmeleri gösterilmez. */
+export function ArticleView({ article, shareUrl }: { article: ArticleViewData; shareUrl?: string }) {
   const { html, toc } = renderArticleHtml(article.content);
   // Tek başlıklı ya da başlıksız yazılarda içindekiler gösterilmez.
   const hasToc = toc.length >= 2;
@@ -32,6 +34,8 @@ export function ArticleView({ article }: { article: ArticleViewData }) {
         <span aria-hidden>·</span>
         <span>{readingMinutes(html)} dk okuma</span>
       </div>
+
+      {shareUrl && <ShareButtons className="mt-4" url={shareUrl} title={article.title} text={article.excerpt} />}
 
       {hasToc && (
         <div className="mt-8 lg:hidden">
@@ -63,7 +67,17 @@ export function ArticleView({ article }: { article: ArticleViewData }) {
         </aside>
       )}
 
-      <p className="notice mt-12">
+      {shareUrl && (
+        <ShareButtons
+          className="mt-14 border-t border-line pt-6"
+          heading="Bu yazıyı paylaş"
+          url={shareUrl}
+          title={article.title}
+          text={article.excerpt}
+        />
+      )}
+
+      <p className="notice mt-8">
         Bu yazı genel bilgilendirme ve düşünce paylaşımı amacı taşır; somut olaylara ilişkin hukuki danışmanlık yerine geçmez.
       </p>
     </article>

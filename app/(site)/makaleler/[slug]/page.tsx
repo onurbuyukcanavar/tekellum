@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation';
 import { connection } from 'next/server';
 import { cache } from 'react';
 import { ArticleView } from '@/components/article-view';
-import { SITE_NAME } from '@/lib/constants';
+import { SITE_NAME, siteUrl } from '@/lib/constants';
 import { getPublishedArticleBySlug } from '@/lib/services/articles';
 
 type Props = { params: Promise<{ slug: string }> };
@@ -37,5 +37,5 @@ export default async function ArticlePage({ params }: Props) {
   const { slug } = await params;
   const article = await load(slug);
   if (!article) notFound();
-  return <ArticleView article={article} />;
+  return <ArticleView article={article} shareUrl={`${siteUrl()}/makaleler/${article.slug}`} />;
 }
