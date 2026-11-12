@@ -3,7 +3,7 @@ import { ContactForm } from '@/components/contact-form';
 import { SITE_NAME } from '@/lib/constants';
 import { CONTACT } from '@/lib/contact';
 
-const DESCRIPTION = `${CONTACT.name} ile iletişim: e-posta adresi ve iletişim formu.`;
+const DESCRIPTION = `${CONTACT.name} ile iletişim: e-posta, LinkedIn ve iletişim formu.`;
 
 export const metadata: Metadata = {
   title: 'İletişim',
@@ -18,13 +18,28 @@ export default function ContactPage() {
       <p className="eyebrow">İletişim</p>
       <h1 className="mt-4 text-4xl sm:text-5xl">{CONTACT.name}</h1>
 
-      <dl className="mt-10 rounded-xl border border-line bg-paper-raised px-6 py-5">
-        <dt className="font-sans text-xs font-semibold uppercase tracking-[0.18em] text-muted">E-posta</dt>
-        <dd className="mt-2 break-all text-lg">
-          <a className="text-navy underline decoration-bronze/50 underline-offset-4 hover:decoration-bronze" href={`mailto:${CONTACT.email}`}>
-            {CONTACT.email}
-          </a>
-        </dd>
+      <dl className="mt-10 grid gap-6 rounded-xl border border-line bg-paper-raised px-6 py-5 sm:grid-cols-2">
+        <div>
+          <dt className="font-sans text-xs font-semibold uppercase tracking-[0.18em] text-muted">E-posta</dt>
+          <dd className="mt-2 break-all text-lg">
+            <a className="text-navy underline decoration-bronze/50 underline-offset-4 hover:decoration-bronze" href={`mailto:${CONTACT.email}`}>
+              {CONTACT.email}
+            </a>
+          </dd>
+        </div>
+        <div>
+          <dt className="font-sans text-xs font-semibold uppercase tracking-[0.18em] text-muted">LinkedIn</dt>
+          <dd className="mt-2 text-lg [overflow-wrap:anywhere]">
+            <a
+              className="text-navy underline decoration-bronze/50 underline-offset-4 hover:decoration-bronze"
+              href={CONTACT.linkedin.url}
+              target="_blank"
+              rel="noopener noreferrer me"
+            >
+              {CONTACT.linkedin.label.replace('/in/', '/in/\u200b')}
+            </a>
+          </dd>
+        </div>
       </dl>
 
       <section className="mt-12" aria-labelledby="mesaj-baslik">
